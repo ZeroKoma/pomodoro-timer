@@ -274,11 +274,11 @@ document.addEventListener("DOMContentLoaded", () => {
           }, SOUND_FADE_DURATION);
         } else {
           setLocalStorageItem("backgroundSoundFile", soundSrc);
-          changeSound(backgroundSound, soundSrc);
           changeSoundVolume(
             backgroundSound,
             getLocalStorageItem("backgroundVolume")
           );
+          changeSound(backgroundSound, soundSrc);
           playSoundFadeIn(backgroundSound, SOUND_FADE_DURATION);
         }
       });
