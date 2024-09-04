@@ -23,15 +23,20 @@ h2 {
 }
 
 #settings-panel {
-  transition: opacity 1s ease;
-  -webkit-transition: opacity 1s ease;
-  -moz-transition: opacity 1s ease;
-  -ms-transition: opacity 1s ease;
-  -o-transition: opacity 1s ease;
+  transition: opacity 1s ease, transform 1.5s ease;
+  -webkit-transition: opacity 1s ease, transform 1.5s ease;
+  -moz-transition: opacity 1s ease, transform 1.5s ease;
+  -ms-transition: opacity 1s ease, transform 1.5s ease;
+  -o-transition: opacity 1s ease, transform 1.5s ease;
 }
 
-.fade-out {
+.settings-panel-fade-out {
+  transform: translateY(-100px);
   opacity: 0;
+  -webkit-transform: translateY(-100px);
+  -moz-transform: translateY(-100px);
+  -ms-transform: translateY(-100px);
+  -o-transform: translateY(-100px);
 }
 
 .options-container {

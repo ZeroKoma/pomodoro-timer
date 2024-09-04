@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
       else changeTimerLabel("Focus Time");
       changeSelectedButton("start");
       isRunning = true;
-      hideSettingsPanel();
+      showHideSettingsPanel();
       timer = setInterval(() => {
         if (timeLeft > 0) {
           timeLeft--;
@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
             switchToPomodoro();
           } else {
             switchToBreak();
-            showSettingsPanel();
+            showHideSettingsPanel();
           }
         }
       }, 1000);
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (isRunning) {
       // changeTimerLabel(newText);
       changeSelectedButton("pause");
-      showSettingsPanel();
+      showHideSettingsPanel();
       clearInterval(timer);
       isRunning = false;
       stopSoundFadeOut(backgroundSound, SOUND_FADE_DURATION);
@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
     isRunning = false;
     cicleOn = false;
     stopSoundFadeOut(backgroundSound, SOUND_FADE_DURATION);
-    showSettingsPanel();
+    showHideSettingsPanel();
     switchToPomodoro();
     changeTimerLabel("Pomodoro Timer");
   }
@@ -205,12 +205,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const modalHtml = `
       <div class="modal fade" id="alertModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-sm mt-5">
-          <div class="modal-content">
-            <div class="modal-body">
+          <div class="modal-content p-2">
+            <div class="modal-body d-flex align-items-center justify-content-center">
+              <span class="me-3">
+                <img width="25" height="25" class="mb-1" alt="Pomodoro icon" src="imgs/favicon.png"/>
+              </span>
               ${message}
             </div>
             <div class="modal-footer">
-              <button id="modalOkButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ok</button>
+              <button id="modalOkButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                OK
+              </button>
             </div>
           </div>
         </div>
@@ -235,12 +240,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function hideSettingsPanel() {
-    document.getElementById("settings-panel").classList.add("fade-out");
-  }
-
-  function showSettingsPanel() {
-    document.getElementById("settings-panel").classList.remove("fade-out");
+  function showHideSettingsPanel() {
+    document
+      .getElementById("settings-panel")
+      .classList.toggle("settings-panel-fade-out");
   }
 
   function initApp() {
