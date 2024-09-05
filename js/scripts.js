@@ -175,7 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateDisplay() {
-    const progress = timeLeft / (focusTime * 60);
+    const progress = timeLeft / ((isBreak ? breakTime : focusTime) * 60);
     const dashOffset = FULL_DASH_ARRAY * (1 - progress);
     progressCircle.style.strokeDashoffset = dashOffset;
     const minutes = Math.floor(timeLeft / 60);
@@ -302,9 +302,10 @@ document.addEventListener("DOMContentLoaded", () => {
     pauseButton.addEventListener("click", pauseTimer);
     stopButton.addEventListener("click", stopTimer);
 
+    // Init real time
     setInterval(function () {
       currentTime();
-    }, 1000);
+    }, 10);
 
     // Init localstorage
     const storedFocusTime = getLocalStorageItem("focusTime");
