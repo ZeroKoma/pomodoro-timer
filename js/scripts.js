@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
       else changeTimerLabel("Focus Time");
       changeSelectedButton("start");
       isRunning = true;
-      showHideSettingsPanel();
+      toggleTimeBreakPanel();
       timer = setInterval(() => {
         if (timeLeft > 0) {
           timeLeft--;
@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
             switchToPomodoro();
           } else {
             switchToBreak();
-            showHideSettingsPanel();
+            toggleTimeBreakPanel();
           }
         }
       }, 1000);
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (isRunning) {
       // changeTimerLabel(newText);
       changeSelectedButton("pause");
-      showHideSettingsPanel();
+      toggleTimeBreakPanel();
       clearInterval(timer);
       isRunning = false;
       stopSoundFadeOut(backgroundSound, SOUND_FADE_DURATION);
@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
     isRunning = false;
     cicleOn = false;
     stopSoundFadeOut(backgroundSound, SOUND_FADE_DURATION);
-    showHideSettingsPanel();
+    hideTimeBreakPanel();
     switchToPomodoro();
     changeTimerLabel("Pomodoro Timer");
   }
@@ -240,10 +240,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function showHideSettingsPanel() {
+  function toggleTimeBreakPanel() {
     document
-      .getElementById("settings-panel")
-      .classList.toggle("settings-panel-fade-out");
+      .getElementById("time-break-panel")
+      .classList.toggle("time-break-panel-fade-out");
+  }
+
+  function hideTimeBreakPanel() {
+    document
+      .getElementById("time-break-panel")
+      .classList.remove("time-break-panel-fade-out");
   }
 
   function initApp() {

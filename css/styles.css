@@ -22,7 +22,7 @@ h2 {
   font-size: 0.875rem;
 }
 
-#settings-panel {
+#time-break-panel {
   transition: opacity 1s ease, transform 1.5s ease;
   -webkit-transition: opacity 1s ease, transform 1.5s ease;
   -moz-transition: opacity 1s ease, transform 1.5s ease;
@@ -30,7 +30,7 @@ h2 {
   -o-transition: opacity 1s ease, transform 1.5s ease;
 }
 
-.settings-panel-fade-out {
+.time-break-panel-fade-out {
   transform: translateY(-100px);
   opacity: 0;
   -webkit-transform: translateY(-100px);
