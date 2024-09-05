@@ -9,7 +9,7 @@ body {
   width: 100%;
 }
 
-h1#time {
+h2#time {
   font-size: 5rem;
   color: #e0e0e0;
 }
@@ -56,6 +56,26 @@ h2 {
 .btn-group .active {
   background-color: #555;
   border-color: #666;
+}
+
+.progress-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: rotate(-90deg);
+}
+
+.progress-ring__circle {
+  transition: 0.35s stroke-dasharray;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+.progress-circle {
+  position: relative;
+  width: 250px;
+  height: 250px;
+  display: inline-block;
 }
 
 .music-icon {

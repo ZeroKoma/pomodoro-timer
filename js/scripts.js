@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const FOCUS_TIME_DEFAULT = 25; // 25; // 25 minutes
   const BREAK_TIME_DEFAULT = 5; // 5 minutes
   const ALARM_SOUND_DEFAULT_VOLUME = 5; // 5%
+  const FULL_DASH_ARRAY = 2 * Math.PI * 120;
   let focusTime = FOCUS_TIME_DEFAULT;
   let breakTime = BREAK_TIME_DEFAULT;
   let timeLeft = focusTime;
@@ -23,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const startButton = document.getElementById("start");
   const pauseButton = document.getElementById("pause");
   const stopButton = document.getElementById("stop");
-
+  const progressCircle = document.querySelector(".progress-ring__circle");
   const tickTockSlider = document.getElementById("tickTockSlider");
   const backgroundSlider = document.getElementById("backgroundSlider");
   const alarmSlider = document.getElementById("alarmSlider");
@@ -174,6 +175,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateDisplay() {
+    const progress = timeLeft / (focusTime * 60);
+    const dashOffset = FULL_DASH_ARRAY * (1 - progress);
+    progressCircle.style.strokeDashoffset = dashOffset;
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
     timeDisplay.textContent = `${minutes.toString().padStart(2, "0")}:${seconds
@@ -355,6 +359,10 @@ document.addEventListener("DOMContentLoaded", () => {
     focusTime = getLocalStorageItem("focusTime");
     breakTime = getLocalStorageItem("breakTime");
     timeLeft = focusTime * 60;
+
+    // Init progress circle
+    progressCircle.style.strokeDasharray = FULL_DASH_ARRAY;
+    progressCircle.style.strokeDashoffset = FULL_DASH_ARRAY;
 
     updateDisplay();
   }
