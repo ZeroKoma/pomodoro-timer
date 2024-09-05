@@ -1,25 +1,35 @@
 /* styles.css */
 
 body {
-  background-color: #121212;
-  color: #e0e0e0;
+  display: flex;
+  height: 100vh;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+  overflow: hidden;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
 }
 
-.row {
-  width: 100%;
-}
-
-h2#time {
+#time {
   font-size: 5rem;
-  color: #e0e0e0;
+  font-variant-numeric: tabular-nums;
+  font-weight: 300;
 }
 
-h2 {
+#timerLabel {
+  font-size: 1.25rem;
+  font-weight: 300;
   margin-bottom: 0;
 }
 
 .fs-14 {
   font-size: 0.875rem;
+}
+
+#timer-panel {
+  width: 22.5rem;
 }
 
 #time-break-panel {
@@ -31,21 +41,39 @@ h2 {
 }
 
 .time-break-panel-fade-out {
-  transform: translateY(-100px);
+  transform: translateY(-6.25rem);
   opacity: 0;
-  -webkit-transform: translateY(-100px);
-  -moz-transform: translateY(-100px);
-  -ms-transform: translateY(-100px);
-  -o-transform: translateY(-100px);
+  -webkit-transform: translateY(-6.25rem);
+  -moz-transform: translateY(-6.25rem);
+  -ms-transform: translateY(-6.25rem);
+  -o-transform: translateY(-6.25rem);
+}
+
+/* Estilo personalizado para la barra de progreso */
+.progress {
+  background-color: #333;
+  height: 0.063rem;
+  overflow: hidden;
+  width: 100%;
+}
+
+.progress-bar {
+  background-color: #666 !important;
+  transition: width 0.5s ease;
+  -webkit-transition: width 0.5s ease;
+  -moz-transition: width 0.5s ease;
+  -ms-transition: width 0.5s ease;
+  -o-transition: width 0.5s ease;
+  overflow: hidden;
 }
 
 .options-container {
-  width: 18.75rem;
+  width: 18.5rem;
 }
 
 .btn-group .btn {
   font-size: 1.25rem;
-  padding: 0.75rem 1.5rem;
+  padding: 0.34rem 1.5rem;
   margin-right: 0.25rem;
   background-color: #333;
   border: 0.063rem solid #444;
@@ -56,26 +84,6 @@ h2 {
 .btn-group .active {
   background-color: #555;
   border-color: #666;
-}
-
-.progress-ring {
-  position: absolute;
-  top: 0;
-  left: 0;
-  transform: rotate(-90deg);
-}
-
-.progress-ring__circle {
-  transition: 0.35s stroke-dasharray;
-  transform: rotate(-90deg);
-  transform-origin: 50% 50%;
-}
-
-.progress-circle {
-  position: relative;
-  width: 250px;
-  height: 250px;
-  display: inline-block;
 }
 
 .music-icon {

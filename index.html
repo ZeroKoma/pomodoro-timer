@@ -40,26 +40,21 @@
     </div>
 
     <div id="timer-panel" class="row">
-        <div class="col-12 d-flex flex-column justify-content-center align-items-center my-4">
-            <div class="d-flex justify-content-center align-items-center mb-4">
+        <div class="col-12 text-center my-4">
+            <div class="d-flex justify-content-center align-items-center">
                 <img width="25" height="25" alt="Pomodoro icon" src="imgs/favicon.png"/>
-                <h1 id="timerLabel" class="mx-3">Pomodoro Timer</h1>
+                <h1 id="timerLabel" class="ms-2">Pomodoro Timer</h1>
             </div>
-            <div id="progress-circle" class="d-flex justify-content-center align-items-center progress-circle">
-                <svg class="progress-ring" width="250" height="250">
-                    <circle class="progress-ring__circle" stroke="#555" stroke-width="5" fill="transparent" r="120" cx="125" cy="125"/> <!-- Ajusta el radio y el centro -->
-                </svg>
-                <h1 id="time" class="display-4 mb-4" style="font-size: 5rem;">25:00</h1> <!-- Asegúrate de que el tamaño de fuente esté especificado -->
+            <h2 id="time">25:00</h2>
+            <div class="progress">
+                <div id="progress-bar" class="progress-bar bg-info" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
-
-
-            <div class="btn-group mt-5">
+            <div class="btn-group mt-3">
                 <button id="start" class="btn btn-secondary">Start</button>
                 <button id="pause" class="btn btn-secondary">Pause</button>
                 <button id="stop" class="btn btn-secondary active">Stop</button>
             </div>
-       
-            <div class="row pt-4 ps-4 fw-light">
+            <div class="row pt-3 fw-light">
                 <div class="col-12 d-flex justify-content-center align-items-center">
                     <p>End Time:</p>
                     <p class="ms-2" id="endTimeValue">-- : --</p>

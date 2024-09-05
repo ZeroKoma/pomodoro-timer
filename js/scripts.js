@@ -5,7 +5,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const FOCUS_TIME_DEFAULT = 25; // 25; // 25 minutes
   const BREAK_TIME_DEFAULT = 5; // 5 minutes
   const ALARM_SOUND_DEFAULT_VOLUME = 5; // 5%
-  const FULL_DASH_ARRAY = 2 * Math.PI * 120;
   let focusTime = FOCUS_TIME_DEFAULT;
   let breakTime = BREAK_TIME_DEFAULT;
   let timeLeft = focusTime;
@@ -19,12 +18,12 @@ document.addEventListener("DOMContentLoaded", () => {
   let alarmSound = new Audio("sounds/alarma-2.mp3");
   alarmSound.loop = true;
   const SOUND_FADE_DURATION = 500;
+  const progressBar = document.getElementById("progress-bar");
 
   const timeDisplay = document.getElementById("time");
   const startButton = document.getElementById("start");
   const pauseButton = document.getElementById("pause");
   const stopButton = document.getElementById("stop");
-  const progressCircle = document.querySelector(".progress-ring__circle");
   const tickTockSlider = document.getElementById("tickTockSlider");
   const backgroundSlider = document.getElementById("backgroundSlider");
   const alarmSlider = document.getElementById("alarmSlider");
@@ -36,6 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
     timeLeft = getLocalStorageItem("breakTime") * 60;
     changeTimerLabel("Break Time");
     updateDisplay();
+    updateProgressBar();
     playSoundFadeIn(alarmSound, SOUND_FADE_DURATION);
     stopSoundFadeOut(backgroundSound, SOUND_FADE_DURATION);
     changeSelectedButton("stop");
@@ -53,6 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
       showAlert("It's time to focus!");
     }
     updateDisplay();
+    updateProgressBar();
   }
 
   function timerOn() {
@@ -66,6 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (timeLeft > 0) {
           timeLeft--;
           updateDisplay();
+          updateProgressBar();
           if (getVolumeSliderValue("tickTockSlider") > 0)
             playSound(tickTockSound);
         } else {
@@ -116,6 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
     hideTimeBreakPanel();
     switchToPomodoro();
     changeTimerLabel("Pomodoro Timer");
+    resetProgressBar();
   }
 
   function updateFocusTimer() {
@@ -175,9 +178,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateDisplay() {
-    const progress = timeLeft / ((isBreak ? breakTime : focusTime) * 60);
-    const dashOffset = FULL_DASH_ARRAY * (1 - progress);
-    progressCircle.style.strokeDashoffset = dashOffset;
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
     timeDisplay.textContent = `${minutes.toString().padStart(2, "0")}:${seconds
@@ -188,6 +188,18 @@ document.addEventListener("DOMContentLoaded", () => {
       .padStart(2, "0")}`;
 
     if (isRunning) updateEndTime();
+  }
+
+  function updateProgressBar() {
+    const totalTime = (isBreak ? breakTime : focusTime) * 60;
+    const progress = ((totalTime - timeLeft) / totalTime) * 100;
+    progressBar.style.width = `${progress}%`;
+    progressBar.setAttribute("aria-valuenow", progress);
+  }
+
+  function resetProgressBar() {
+    progressBar.style.width = "0%";
+    progressBar.setAttribute("aria-valuenow", 0);
   }
 
   function changeTimerLabel(newText) {
@@ -361,9 +373,7 @@ document.addEventListener("DOMContentLoaded", () => {
     breakTime = getLocalStorageItem("breakTime");
     timeLeft = focusTime * 60;
 
-    // Init progress circle
-    progressCircle.style.strokeDasharray = FULL_DASH_ARRAY;
-    progressCircle.style.strokeDashoffset = FULL_DASH_ARRAY;
+    // Init progress figure
 
     updateDisplay();
   }
