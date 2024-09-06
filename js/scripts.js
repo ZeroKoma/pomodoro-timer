@@ -80,11 +80,12 @@ document.addEventListener("DOMContentLoaded", () => {
             showTimeBreakPanel();
           }
         }
-      }, 50);
+      }, 1000);
     }
   }
 
   function startTimerButton() {
+    TimeActive();
     cicleOn = true;
     timerOn();
     hideTimeBreakPanel();
@@ -100,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function pauseTimerButton() {
     if (isRunning) {
-      // changeTimerLabel(newText);
+      TimeInactive();
       changeSelectedButton("pause");
       showTimeBreakPanel();
       clearInterval(timer);
@@ -110,6 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function stopTimerButton() {
+    TimeInactive();
     changeSelectedButton("stop");
     document.getElementById("endTimeValue").textContent = "-- : --";
     clearInterval(timer);
@@ -269,6 +271,14 @@ document.addEventListener("DOMContentLoaded", () => {
       div.classList.add("hidden");
       div.style.height = "0";
     });
+  }
+
+  function TimeActive() {
+    document.getElementById("time").classList.add("time-active");
+  }
+
+  function TimeInactive() {
+    document.getElementById("time").classList.remove("time-active");
   }
 
   function initApp() {

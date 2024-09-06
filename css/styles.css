@@ -16,6 +16,15 @@ body {
   font-size: 5rem;
   font-variant-numeric: tabular-nums;
   font-weight: 300;
+  transition: font-size 1s ease-in-out;
+  -webkit-transition: font-size 1s ease-in-out;
+  -moz-transition: font-size 1s ease-in-out;
+  -ms-transition: font-size 1s ease-in-out;
+  -o-transition: font-size 1s ease-in-out;
+}
+
+#time.time-active {
+  font-size: 6rem;
 }
 
 #timerLabel {
