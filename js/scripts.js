@@ -32,6 +32,16 @@ document.addEventListener("DOMContentLoaded", () => {
   let breakTimeAccumulated = 0;
   let totalTimeAccumulated = 0;
 
+  const volumeUpIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="green" class="bi bi-volume-up" viewBox="0 0 16 16">
+  <path d="M11.536 14.01A8.47 8.47 0 0 0 14.026 8a8.47 8.47 0 0 0-2.49-6.01l-.708.707A7.48 7.48 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303z"/>
+  <path d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.48 5.48 0 0 1 11.025 8a5.48 5.48 0 0 1-1.61 3.89z"/>
+  <path d="M10.025 8a4.5 4.5 0 0 1-1.318 3.182L8 10.475A3.5 3.5 0 0 0 9.025 8c0-.966-.392-1.841-1.025-2.475l.707-.707A4.5 4.5 0 0 1 10.025 8M7 4a.5.5 0 0 0-.812-.39L3.825 5.5H1.5A.5.5 0 0 0 1 6v4a.5.5 0 0 0 .5.5h2.325l2.363 1.89A.5.5 0 0 0 7 12zM4.312 6.39 6 5.04v5.92L4.312 9.61A.5.5 0 0 0 4 9.5H2v-3h2a.5.5 0 0 0 .312-.11"/>
+</svg>`;
+
+  const volumeMuteIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="firebrick" class="bi bi-volume-mute" viewBox="0 0 16 16">
+    <path d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06M6 5.04 4.312 6.39A.5.5 0 0 1 4 6.5H2v3h2a.5.5 0 0 1 .312.11L6 10.96zm7.854.606a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0"/>
+  </svg>`;
+
   /* FUNCTIONS */
 
   function switchToBreakMode() {
@@ -46,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
     showAlert("It's time to break!");
     setTimeout(() => {
       displayAccumulatedTimes();
-    }, 250);
+    }, 100);
   }
 
   function switchToPomodoroMode() {
@@ -60,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
       showAlert("It's time to focus!");
       setTimeout(() => {
         displayAccumulatedTimes();
-      }, 250);
+      }, 100);
     }
     updateDisplay();
     updateProgressBar();
@@ -92,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
             showTimeBreakPanel();
           }
         }
-      }, 10);
+      }, 1000);
     }
   }
 
@@ -208,7 +218,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function formatTime(timeInSeconds) {
-    console.log("timeInSeconds: ", timeInSeconds);
     timeInSeconds = timeInSeconds * 60;
     const hours = Math.floor(timeInSeconds / 3600);
     const minutes = Math.floor((timeInSeconds % 3600) / 60);
@@ -223,6 +232,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function displayAccumulatedTimes() {
+    document.getElementById("time-results").style.opacity = 1;
     document.getElementById("focus-time-accumulated").innerText =
       formatTime(focusTimeAccumulated);
     document.getElementById("break-time-accumulated").innerText =
@@ -274,30 +284,35 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="modal fade" id="alertModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog mt-5">
           <div class="modal-content p-2">
+            <div class="row">
+              <div class="col-12 pt-2 pe-4 text-end">
+                <div id="alert-volume-icon" title="Stop Alarma Sound"></div>
+              </div>
+            </div>
             <div id="time-results" class="modal-body fw-light d-flex justify-content-center">
-            <div>
-              <div class="time-row">
-                  <span class="time-label">Focus Time today:</span>
-                  <span  id="focus-time-accumulated"  class="time-value">10min</span>
-              </div>
-              <div class="time-row">
-                  <span class="time-label">Break Time today:</span>
-                  <span id="break-time-accumulated" class="time-value">1h</span>
-              </div>
-              <div class="time-row">
-                  <span class="time-label">Total Time today:</span>
-                  <span id="total-time-accumulated" class="time-value">1h and 10min</span>
+              <div class="mb-4">
+                <div class="time-row">
+                    <span class="time-label">Focus Time today:</span>
+                    <span  id="focus-time-accumulated"  class="time-value">10min</span>
+                </div>
+                <div class="time-row">
+                    <span class="time-label">Break Time today:</span>
+                    <span id="break-time-accumulated" class="time-value">1h</span>
+                </div>
+                <div class="time-row">
+                    <span class="time-label">Total Time today:</span>
+                    <span id="total-time-accumulated" class="time-value">1h and 10min</span>
+                </div>
               </div>
             </div>
-            </div>
-            <div class="modal-footer d-flex justify-content-between align-items-center">
-              <div>
+            <div class="modal-footer d-flex justify-content-center align-items-center">
+              <div class=" flex-fill text-center ps-4">
                 <span class="me-3">
                   <img width="25" height="25" class="mb-1" alt="Pomodoro icon" src="imgs/favicon.png"/>
                 </span>
                 ${message}
               </div>
-              <button id="modalOkButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              <button id="modalOkButton" type="button" class="btn btn-secondary ms-auto" data-bs-dismiss="modal">
                 OK
               </button>
             </div>
@@ -305,12 +320,16 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
       </div>
     `;
-    document.body.insertAdjacentHTML("beforeend", modalHtml);
-    const modal = new bootstrap.Modal(document.getElementById("alertModal"));
-    modal.show();
-
-    document.getElementById("modalOkButton").addEventListener("click", () => {
+    // Guardamos las funciones en variables
+    const volumeIconClickHandler = () => {
       stopSound(alarmSound, SOUND_FADE_DURATION);
+      volumeIcon.innerHTML = volumeMuteIcon;
+    };
+
+    const modalOkButtonClickHandler = () => {
+      stopSound(alarmSound, SOUND_FADE_DURATION);
+      volumeIcon.removeEventListener("click", volumeIconClickHandler);
+      modalOkButton.removeEventListener("click", modalOkButtonClickHandler);
       const modalElement = document.getElementById("alertModal");
       const modalInstance = bootstrap.Modal.getInstance(modalElement);
       modalInstance.hide();
@@ -321,7 +340,40 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         { once: true }
       );
-    });
+    };
+
+    document.body.insertAdjacentHTML("beforeend", modalHtml);
+    const modal = new bootstrap.Modal(document.getElementById("alertModal"));
+    modal.show();
+
+    const volumeIcon = document.getElementById("alert-volume-icon");
+    volumeIcon.innerHTML = volumeUpIcon;
+    volumeIcon.addEventListener("click", volumeIconClickHandler);
+
+    const modalOkButton = document.getElementById("modalOkButton");
+    modalOkButton.addEventListener("click", modalOkButtonClickHandler);
+
+    // const volumeIcon = document.getElementById("alert-volume-icon");
+    // volumeIcon.innerHTML = volumeUpIcon;
+    // volumeIcon.addEventListener("click", () => {
+    //   stopSound(alarmSound, SOUND_FADE_DURATION);
+    //   volumeIcon.innerHTML = volumeMuteIcon;
+    // });
+
+    // document.getElementById("modalOkButton").addEventListener("click", () => {
+    //   stopSound(alarmSound, SOUND_FADE_DURATION);
+    //   volumeIcon.removeEventListener("click", volumeIconClickHandler);
+    //   const modalElement = document.getElementById("alertModal");
+    //   const modalInstance = bootstrap.Modal.getInstance(modalElement);
+    //   modalInstance.hide();
+    //   modalElement.addEventListener(
+    //     "hidden.bs.modal",
+    //     () => {
+    //       modalElement.remove();
+    //     },
+    //     { once: true }
+    //   );
+    // });
   }
 
   function showTimeBreakPanel() {
