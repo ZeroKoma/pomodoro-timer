@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* FUNCTIONS */
 
-  function switchToBreak() {
+  function switchToBreakMode() {
     isBreak = true;
     timeLeft = getLocalStorageItem("breakTime") * 60;
     changeTimerLabel("Break Time");
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
     showAlert("It's time to break!");
   }
 
-  function switchToPomodoro() {
+  function switchToPomodoroMode() {
     isBreak = false;
     timeLeft = getLocalStorageItem("focusTime") * 60;
     changeTimerLabel("Focus Time");
@@ -62,7 +62,6 @@ document.addEventListener("DOMContentLoaded", () => {
       else changeTimerLabel("Focus Time");
       changeSelectedButton("start");
       isRunning = true;
-      toggleTimeBreakPanel();
       timer = setInterval(() => {
         if (timeLeft > 0) {
           timeLeft--;
@@ -74,19 +73,21 @@ document.addEventListener("DOMContentLoaded", () => {
           clearInterval(timer);
           isRunning = false;
           if (isBreak) {
-            switchToPomodoro();
+            showTimeBreakPanel();
+            switchToPomodoroMode();
           } else {
-            switchToBreak();
-            toggleTimeBreakPanel();
+            switchToBreakMode();
+            showTimeBreakPanel();
           }
         }
-      }, 1000);
+      }, 50);
     }
   }
 
-  function startTimer() {
+  function startTimerButton() {
     cicleOn = true;
     timerOn();
+    hideTimeBreakPanel();
     if (backgroundSound.src && backgroundSound.src !== "") {
       changeSoundVolume(
         backgroundSound,
@@ -97,45 +98,47 @@ document.addEventListener("DOMContentLoaded", () => {
     updateEndTime();
   }
 
-  function pauseTimer() {
+  function pauseTimerButton() {
     if (isRunning) {
       // changeTimerLabel(newText);
       changeSelectedButton("pause");
-      toggleTimeBreakPanel();
+      showTimeBreakPanel();
       clearInterval(timer);
       isRunning = false;
       stopSoundFadeOut(backgroundSound, SOUND_FADE_DURATION);
     }
   }
 
-  function stopTimer() {
+  function stopTimerButton() {
     changeSelectedButton("stop");
     document.getElementById("endTimeValue").textContent = "-- : --";
     clearInterval(timer);
     isRunning = false;
     cicleOn = false;
     stopSoundFadeOut(backgroundSound, SOUND_FADE_DURATION);
-    hideTimeBreakPanel();
-    switchToPomodoro();
+    showTimeBreakPanel();
+    switchToPomodoroMode();
     changeTimerLabel("Pomodoro Timer");
     resetProgressBar();
   }
 
-  function updateFocusTimer() {
+  function getFocusSliderValue() {
     focusTime = getTimeSliderValue("focusSlider");
     if (!isBreak) {
       timeLeft = focusTime * 60;
       updateDisplay();
+      updateEndTime();
     }
     setTimeSliderValue("focusSlider", focusTime);
     setLocalStorageItem("focusTime", focusTime);
   }
 
-  function updateBreakTimer() {
+  function getBreakSliderValue() {
     breakTime = getTimeSliderValue("breakSlider");
     if (isBreak) {
       timeLeft = breakTime * 60;
       updateDisplay();
+      updateEndTime();
     }
     setTimeSliderValue("breakSlider", breakTime);
     setLocalStorageItem("breakTime", breakTime);
@@ -149,28 +152,26 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateEndTime() {
     const currentTime = new Date();
     const endTime = new Date(currentTime.getTime() + timeLeft * 1000);
-
     const hours = endTime.getHours().toString().padStart(2, "0");
     const minutes = endTime.getMinutes().toString().padStart(2, "0");
-
     document.getElementById("endTimeValue").textContent = `${hours}:${minutes}`;
   }
 
-  function updateTickTockVolume() {
+  function getTickTockVolumeValue() {
     const value = getVolumeSliderValue("tickTockSlider");
     showVolumeSliderValue("tickTockSliderText", value);
     changeSoundVolume(tickTockSound, value);
     setLocalStorageItem("tickTockSoundVolume", value);
   }
 
-  function updateBackgroundVolume() {
+  function getBackgroundVolumeValue() {
     const value = getVolumeSliderValue("backgroundSlider");
     showVolumeSliderValue("backgroundSliderText", value);
     changeSoundVolume(backgroundSound, value);
     setLocalStorageItem("backgroundVolume", value);
   }
 
-  function updateAlarmVolume() {
+  function getAlarmVolumeValue() {
     const value = getVolumeSliderValue("alarmSlider");
     showVolumeSliderValue("alarmSliderText", value);
     changeSoundVolume(alarmSound, value);
@@ -186,8 +187,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.title = `${minutes.toString().padStart(2, "0")}:${seconds
       .toString()
       .padStart(2, "0")}`;
-
-    if (isRunning) updateEndTime();
   }
 
   function updateProgressBar() {
@@ -256,33 +255,37 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function toggleTimeBreakPanel() {
-    document
-      .getElementById("time-break-panel")
-      .classList.toggle("time-break-panel-fade-out");
+  function showTimeBreakPanel() {
+    const div = document.getElementById("sliders-time-panel");
+    div.classList.remove("hidden");
+    div.style.height = div.offsetHeight + "px";
+    div.style.height = "";
   }
 
   function hideTimeBreakPanel() {
-    document
-      .getElementById("time-break-panel")
-      .classList.remove("time-break-panel-fade-out");
+    const div = document.getElementById("sliders-time-panel");
+    div.style.height = div.scrollHeight + "px";
+    requestAnimationFrame(() => {
+      div.classList.add("hidden");
+      div.style.height = "0";
+    });
   }
 
   function initApp() {
     // Init focus/break sliders
     focusSlider.addEventListener("input", () => {
       focusSliderText.textContent = focusSlider.value;
-      updateFocusTimer();
+      getFocusSliderValue();
       updateEndTime();
     });
     breakSlider.addEventListener("input", () => {
-      updateBreakTimer();
+      getBreakSliderValue();
     });
 
     // Init Volume sliders
-    tickTockSlider.addEventListener("input", updateTickTockVolume);
-    backgroundSlider.addEventListener("input", updateBackgroundVolume);
-    alarmSlider.addEventListener("input", updateAlarmVolume);
+    tickTockSlider.addEventListener("input", getTickTockVolumeValue);
+    backgroundSlider.addEventListener("input", getBackgroundVolumeValue);
+    alarmSlider.addEventListener("input", getAlarmVolumeValue);
 
     // Init Background music icons
     const backgroundAmbientIcons = document.querySelectorAll(".music-icon");
@@ -310,9 +313,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Init Buttons play, pause and stop
-    startButton.addEventListener("click", startTimer);
-    pauseButton.addEventListener("click", pauseTimer);
-    stopButton.addEventListener("click", stopTimer);
+    startButton.addEventListener("click", startTimerButton);
+    pauseButton.addEventListener("click", pauseTimerButton);
+    stopButton.addEventListener("click", stopTimerButton);
 
     // Init real time
     setInterval(function () {

@@ -28,37 +28,49 @@ body {
   font-size: 0.875rem;
 }
 
-#timer-panel {
+#display-panel {
   width: 22.5rem;
 }
 
-#time-break-panel {
-  transition: opacity 1s ease, transform 1.5s ease;
-  -webkit-transition: opacity 1s ease, transform 1.5s ease;
-  -moz-transition: opacity 1s ease, transform 1.5s ease;
-  -ms-transition: opacity 1s ease, transform 1.5s ease;
-  -o-transition: opacity 1s ease, transform 1.5s ease;
+#sliders-time-panel {
+  height: 7.5rem;
 }
 
-.time-break-panel-fade-out {
-  transform: translateY(-6.25rem);
+#currentTime {
+  font-variant-numeric: tabular-nums;
+}
+
+.separator {
+  margin-top: 1.2rem;
+  height: 0.063rem;
+  width: 18.5rem;
+  background-color: #444;
+}
+
+.container .hidden-box {
+  width: 100%;
+  overflow: hidden;
+  transition: height 1s ease, opacity 1s ease;
+  -webkit-transition: height 1s ease, opacity 1s ease;
+  -moz-transition: height 1s ease, opacity 1s ease;
+  -ms-transition: height 1s ease, opacity 1s ease;
+  -o-transition: height 1s ease, opacity 1s ease;
+}
+
+.container .hidden-box.hidden {
   opacity: 0;
-  -webkit-transform: translateY(-6.25rem);
-  -moz-transform: translateY(-6.25rem);
-  -ms-transform: translateY(-6.25rem);
-  -o-transform: translateY(-6.25rem);
+  height: 0 !important;
 }
 
-/* Estilo personalizado para la barra de progreso */
 .progress {
-  background-color: #333;
+  background-color: #555;
   height: 0.063rem;
   overflow: hidden;
-  width: 100%;
+  width: 18.125rem;
 }
 
 .progress-bar {
-  background-color: #666 !important;
+  background-color: #888 !important;
   transition: width 0.5s ease;
   -webkit-transition: width 0.5s ease;
   -moz-transition: width 0.5s ease;

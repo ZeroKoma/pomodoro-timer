@@ -9,45 +9,18 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css"> 
 </head>
-<body class="container bg-dark text-light py-5 d-flex flex-column justify-content-center align-items-center">
-
-    <div id="time-break-panel" class="row fw-light fs-14">
-        <div class="col-12 d-flex justify-content-center">
-            <div class="options-container">
-                <div class="mb-2">
-                    <span class="me-3">Focus Time:</span>
-                    <div class="d-flex">
-                        <input type="range" id="focusSlider" min="5" max="50" step="5" value="25">
-                        <div class="text-light d-flex ms-3">
-                            <span id="focusSliderText">25</span>
-                            <span>min</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mb-2">
-                    <span class="me-3">Break Time:</span>
-                    <div class="d-flex">
-                        <input type="range" id="breakSlider" min="5" max="30" step="5" value="5">
-                        <div class="text-light d-flex ms-3">
-                            <span id="breakSliderText">5</span>
-                            <span>min</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="timer-panel" class="row">
-        <div class="col-12 text-center my-4">
+<body class="container bg-dark text-light d-flex flex-column justify-content-center align-items-center">
+    <div id="display-panel">
+        <div class="text-center my-4">
             <div class="d-flex justify-content-center align-items-center">
                 <img width="25" height="25" alt="Pomodoro icon" src="imgs/favicon.png"/>
                 <h1 id="timerLabel" class="ms-2">Pomodoro Timer</h1>
             </div>
             <h2 id="time">25:00</h2>
-            <div class="progress">
-                <div id="progress-bar" class="progress-bar bg-info" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+            <div class="d-flex justify-content-center">
+                <div class="progress">
+                    <div id="progress-bar" class="progress-bar bg-info" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
             </div>
             <div class="btn-group mt-3">
                 <button id="start" class="btn btn-secondary">Start</button>
@@ -63,8 +36,36 @@
         </div>
     </div>
 
-    <div class="row fw-light fs-14 mt-auto">
-        <div class="col-12 d-flex justify-content-center">
+    <div id="sliders-time-panel" class="fw-light fs-14 hidden-box">
+        <div class="d-flex flex-column align-items-center justify-content-center">
+            <div class="options-container">
+                <div class="mb-2">
+                    <span class="me-3">Focus Time:</span>
+                    <div class="d-flex">
+                        <input type="range" id="focusSlider" min="5" max="50" step="5" value="25">
+                        <div class="text-light d-flex ms-3">
+                            <span id="focusSliderText">25</span>
+                            <span>min</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <span class="me-3">Break Time:</span>
+                    <div class="d-flex">
+                        <input type="range" id="breakSlider" min="5" max="30" step="5" value="5">
+                        <div class="text-light d-flex ms-3">
+                            <span id="breakSliderText">5</span>
+                            <span>min</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="separator"></div>
+        </div>
+    </div>
+
+    <div id="sliders-volume-panel" class="fw-light fs-14">
+        <div class="d-flex justify-content-center">
             <div class="options-container">
                 <div class="mt-2 mb-2">
                     <span class="me-3">Tick tock Volume:</span>
@@ -114,13 +115,10 @@
                 </div>
             </div>
         </div>
-        <div class="row pt-4 ps-4 fw-light">
-            <div class="col-6 text-end gx-0">
-                <span>Current Time:</span>
-            </div>
-            <div class="col-6 text-start">
-                <span id="currentTime">00:00:00</span>
-            </div>
+        <div class="text-center pt-4 fw-light">
+            <span>Current Time:</span>
+            <span id="currentTime">00:00:00</span>
+        </div>
         </div>
     </div>
 
