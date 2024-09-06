@@ -207,3 +207,22 @@ input[type="range"]:focus::-moz-range-thumb {
 .btn-close {
   filter: invert(1);
 }
+
+#time-results .time-container {
+  text-align: left;
+}
+
+#time-results .time-row {
+  display: flex;
+  justify-content: flex-start;
+}
+
+#time-results .time-label {
+  min-width: 7.5rem;
+  text-align: right;
+  margin-right: 0.625rem;
+}
+
+#time-results .time-value {
+  text-align: left;
+}

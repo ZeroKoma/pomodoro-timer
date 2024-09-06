@@ -28,6 +28,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const backgroundSlider = document.getElementById("backgroundSlider");
   const alarmSlider = document.getElementById("alarmSlider");
 
+  let focusTimeAccumulated = 0;
+  let breakTimeAccumulated = 0;
+  let totalTimeAccumulated = 0;
+
   /* FUNCTIONS */
 
   function switchToBreakMode() {
@@ -40,6 +44,9 @@ document.addEventListener("DOMContentLoaded", () => {
     stopSoundFadeOut(backgroundSound, SOUND_FADE_DURATION);
     changeSelectedButton("stop");
     showAlert("It's time to break!");
+    setTimeout(() => {
+      displayAccumulatedTimes();
+    }, 250);
   }
 
   function switchToPomodoroMode() {
@@ -51,6 +58,9 @@ document.addEventListener("DOMContentLoaded", () => {
       stopSoundFadeOut(backgroundSound, SOUND_FADE_DURATION);
       changeSelectedButton("stop");
       showAlert("It's time to focus!");
+      setTimeout(() => {
+        displayAccumulatedTimes();
+      }, 250);
     }
     updateDisplay();
     updateProgressBar();
@@ -73,14 +83,16 @@ document.addEventListener("DOMContentLoaded", () => {
           clearInterval(timer);
           isRunning = false;
           if (isBreak) {
+            updateBreakTimeAccumulated(breakTime);
             showTimeBreakPanel();
             switchToPomodoroMode();
           } else {
+            updateFocusTimeAccumulated(focusTime);
             switchToBreakMode();
             showTimeBreakPanel();
           }
         }
-      }, 1000);
+      }, 10);
     }
   }
 
@@ -122,6 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
     switchToPomodoroMode();
     changeTimerLabel("Pomodoro Timer");
     resetProgressBar();
+    updateTotalTimeAccumulated();
   }
 
   function getFocusSliderValue() {
@@ -180,6 +193,44 @@ document.addEventListener("DOMContentLoaded", () => {
     setLocalStorageItem("alarmSoundVolume", value);
   }
 
+  function updateFocusTimeAccumulated(sessionTime) {
+    focusTimeAccumulated += sessionTime;
+    updateTotalTimeAccumulated();
+  }
+
+  function updateBreakTimeAccumulated(sessionTime) {
+    breakTimeAccumulated += sessionTime;
+    updateTotalTimeAccumulated();
+  }
+
+  function updateTotalTimeAccumulated() {
+    totalTimeAccumulated = focusTimeAccumulated + breakTimeAccumulated;
+  }
+
+  function formatTime(timeInSeconds) {
+    console.log("timeInSeconds: ", timeInSeconds);
+    timeInSeconds = timeInSeconds * 60;
+    const hours = Math.floor(timeInSeconds / 3600);
+    const minutes = Math.floor((timeInSeconds % 3600) / 60);
+
+    if (hours > 0 && minutes > 0) {
+      return `${hours}h and ${minutes}min`;
+    } else if (hours > 0) {
+      return `${hours}h`;
+    } else {
+      return `${minutes}min`;
+    }
+  }
+
+  function displayAccumulatedTimes() {
+    document.getElementById("focus-time-accumulated").innerText =
+      formatTime(focusTimeAccumulated);
+    document.getElementById("break-time-accumulated").innerText =
+      formatTime(breakTimeAccumulated);
+    document.getElementById("total-time-accumulated").innerText =
+      formatTime(totalTimeAccumulated);
+  }
+
   function updateDisplay() {
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
@@ -221,15 +272,31 @@ document.addEventListener("DOMContentLoaded", () => {
   function showAlert(message) {
     const modalHtml = `
       <div class="modal fade" id="alertModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog modal-sm mt-5">
+        <div class="modal-dialog mt-5">
           <div class="modal-content p-2">
-            <div class="modal-body d-flex align-items-center justify-content-center">
-              <span class="me-3">
-                <img width="25" height="25" class="mb-1" alt="Pomodoro icon" src="imgs/favicon.png"/>
-              </span>
-              ${message}
+            <div id="time-results" class="modal-body fw-light d-flex justify-content-center">
+            <div>
+              <div class="time-row">
+                  <span class="time-label">Focus Time today:</span>
+                  <span  id="focus-time-accumulated"  class="time-value">10min</span>
+              </div>
+              <div class="time-row">
+                  <span class="time-label">Break Time today:</span>
+                  <span id="break-time-accumulated" class="time-value">1h</span>
+              </div>
+              <div class="time-row">
+                  <span class="time-label">Total Time today:</span>
+                  <span id="total-time-accumulated" class="time-value">1h and 10min</span>
+              </div>
             </div>
-            <div class="modal-footer">
+            </div>
+            <div class="modal-footer d-flex justify-content-between align-items-center">
+              <div>
+                <span class="me-3">
+                  <img width="25" height="25" class="mb-1" alt="Pomodoro icon" src="imgs/favicon.png"/>
+                </span>
+                ${message}
+              </div>
               <button id="modalOkButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                 OK
               </button>
