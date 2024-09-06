@@ -50,13 +50,14 @@ document.addEventListener("DOMContentLoaded", () => {
     changeTimerLabel("Break Time");
     updateDisplay();
     updateProgressBar();
+    TimeInactive();
     playSoundFadeIn(alarmSound, SOUND_FADE_DURATION);
     stopSoundFadeOut(backgroundSound, SOUND_FADE_DURATION);
     changeSelectedButton("stop");
     showAlert("It's time to break!");
     setTimeout(() => {
       displayAccumulatedTimes();
-    }, 100);
+    }, 200);
   }
 
   function switchToPomodoroMode() {
@@ -64,13 +65,14 @@ document.addEventListener("DOMContentLoaded", () => {
     timeLeft = getLocalStorageItem("focusTime") * 60;
     changeTimerLabel("Focus Time");
     if (cicleOn) {
+      TimeInactive();
       playSoundFadeIn(alarmSound, SOUND_FADE_DURATION);
       stopSoundFadeOut(backgroundSound, SOUND_FADE_DURATION);
       changeSelectedButton("stop");
       showAlert("It's time to focus!");
       setTimeout(() => {
         displayAccumulatedTimes();
-      }, 100);
+      }, 200);
     }
     updateDisplay();
     updateProgressBar();
@@ -111,6 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cicleOn = true;
     timerOn();
     hideTimeBreakPanel();
+    pauseButtonRemoveBlinking();
     if (backgroundSound.src && backgroundSound.src !== "") {
       changeSoundVolume(
         backgroundSound,
@@ -123,6 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function pauseTimerButton() {
     if (isRunning) {
+      pauseButtonAddBlinking();
       TimeInactive();
       changeSelectedButton("pause");
       showTimeBreakPanel();
@@ -133,6 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function stopTimerButton() {
+    pauseButtonRemoveBlinking();
     TimeInactive();
     changeSelectedButton("stop");
     document.getElementById("endTimeValue").textContent = "-- : --";
@@ -279,6 +284,14 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById(button).classList.add("active");
   }
 
+  function pauseButtonAddBlinking() {
+    document.getElementById("pause").classList.add("blinking");
+  }
+
+  function pauseButtonRemoveBlinking() {
+    document.getElementById("pause").classList.remove("blinking");
+  }
+
   function showAlert(message) {
     const modalHtml = `
       <div class="modal fade" id="alertModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
@@ -286,21 +299,21 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="modal-content p-2">
             <div class="row">
               <div class="col-12 pt-2 pe-4 text-end">
-                <div id="alert-volume-icon" title="Stop Alarma Sound"></div>
+                <div id="alert-volume-icon" class="blinking" title="Stop Alarma Sound"></div>
               </div>
             </div>
             <div id="time-results" class="modal-body fw-light d-flex justify-content-center">
               <div class="mb-4">
                 <div class="time-row">
-                    <span class="time-label">Focus Time today:</span>
+                    <span class="time-label">Focus Time:</span>
                     <span  id="focus-time-accumulated"  class="time-value">10min</span>
                 </div>
                 <div class="time-row">
-                    <span class="time-label">Break Time today:</span>
+                    <span class="time-label">Break Time:</span>
                     <span id="break-time-accumulated" class="time-value">1h</span>
                 </div>
-                <div class="time-row">
-                    <span class="time-label">Total Time today:</span>
+                <div class="time-row border-top mt-2 pt-1">
+                    <span class="time-label">Total Time:</span>
                     <span id="total-time-accumulated" class="time-value">1h and 10min</span>
                 </div>
               </div>
@@ -324,6 +337,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const volumeIconClickHandler = () => {
       stopSound(alarmSound, SOUND_FADE_DURATION);
       volumeIcon.innerHTML = volumeMuteIcon;
+      volumeIcon.classList.remove("blinking");
     };
 
     const modalOkButtonClickHandler = () => {
@@ -352,28 +366,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const modalOkButton = document.getElementById("modalOkButton");
     modalOkButton.addEventListener("click", modalOkButtonClickHandler);
-
-    // const volumeIcon = document.getElementById("alert-volume-icon");
-    // volumeIcon.innerHTML = volumeUpIcon;
-    // volumeIcon.addEventListener("click", () => {
-    //   stopSound(alarmSound, SOUND_FADE_DURATION);
-    //   volumeIcon.innerHTML = volumeMuteIcon;
-    // });
-
-    // document.getElementById("modalOkButton").addEventListener("click", () => {
-    //   stopSound(alarmSound, SOUND_FADE_DURATION);
-    //   volumeIcon.removeEventListener("click", volumeIconClickHandler);
-    //   const modalElement = document.getElementById("alertModal");
-    //   const modalInstance = bootstrap.Modal.getInstance(modalElement);
-    //   modalInstance.hide();
-    //   modalElement.addEventListener(
-    //     "hidden.bs.modal",
-    //     () => {
-    //       modalElement.remove();
-    //     },
-    //     { once: true }
-    //   );
-    // });
   }
 
   function showTimeBreakPanel() {

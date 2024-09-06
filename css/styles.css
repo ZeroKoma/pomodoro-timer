@@ -107,6 +107,23 @@ body {
   border-color: #666;
 }
 
+@keyframes blink {
+  0% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.2;
+  }
+}
+
+.blinking {
+  animation: blink 1.75s infinite;
+  -webkit-animation: blink 1.75s infinite;
+}
+
 .music-icon {
   transition: color 0.3s ease;
   margin-right: 1rem;
