@@ -1,6 +1,6 @@
 // Stored time in minutes
 // Stored volume values between 0 and 100 (%)
-// ITEMS
+// STORED ITEMS
 // tickTockSoundVolume
 // alarmSoundVolume
 // backgroundSoundFile

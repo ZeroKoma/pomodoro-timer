@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let breakTimeAccumulated = 0;
   let totalTimeAccumulated = 0;
 
-  const volumeUpIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="green" class="bi bi-volume-up" viewBox="0 0 16 16">
+  const volumeUpIcon = `<svg style="cursor: pointer;" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="green" class="bi bi-volume-up" viewBox="0 0 16 16">
   <path d="M11.536 14.01A8.47 8.47 0 0 0 14.026 8a8.47 8.47 0 0 0-2.49-6.01l-.708.707A7.48 7.48 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303z"/>
   <path d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.48 5.48 0 0 1 11.025 8a5.48 5.48 0 0 1-1.61 3.89z"/>
   <path d="M10.025 8a4.5 4.5 0 0 1-1.318 3.182L8 10.475A3.5 3.5 0 0 0 9.025 8c0-.966-.392-1.841-1.025-2.475l.707-.707A4.5 4.5 0 0 1 10.025 8M7 4a.5.5 0 0 0-.812-.39L3.825 5.5H1.5A.5.5 0 0 0 1 6v4a.5.5 0 0 0 .5.5h2.325l2.363 1.89A.5.5 0 0 0 7 12zM4.312 6.39 6 5.04v5.92L4.312 9.61A.5.5 0 0 0 4 9.5H2v-3h2a.5.5 0 0 0 .312-.11"/>
@@ -208,18 +208,54 @@ document.addEventListener("DOMContentLoaded", () => {
     setLocalStorageItem("alarmSoundVolume", value);
   }
 
-  function updateFocusTimeAccumulated(sessionTime) {
-    focusTimeAccumulated += sessionTime;
-    updateTotalTimeAccumulated();
-  }
-
-  function updateBreakTimeAccumulated(sessionTime) {
-    breakTimeAccumulated += sessionTime;
-    updateTotalTimeAccumulated();
+  function saveAccumulatedTimes() {
+    setLocalStorageItem("focusTimeAccumulated", focusTimeAccumulated);
+    setLocalStorageItem("breakTimeAccumulated", breakTimeAccumulated);
+    setLocalStorageItem("totalTimeAccumulated", totalTimeAccumulated);
   }
 
   function updateTotalTimeAccumulated() {
     totalTimeAccumulated = focusTimeAccumulated + breakTimeAccumulated;
+  }
+
+  function updateFocusTimeAccumulated(sessionTime) {
+    focusTimeAccumulated += sessionTime;
+    saveAccumulatedTimes(
+      focusTimeAccumulated,
+      breakTimeAccumulated,
+      updateTotalTimeAccumulated()
+    );
+  }
+
+  function updateBreakTimeAccumulated(sessionTime) {
+    breakTimeAccumulated += sessionTime;
+    saveAccumulatedTimes(
+      focusTimeAccumulated,
+      breakTimeAccumulated,
+      updateTotalTimeAccumulated()
+    );
+  }
+
+  function resetAccumulatedTimesIfNewDay() {
+    const today = new Date().toLocaleDateString();
+    const storedDate = getLocalStorageItem("lastDate");
+
+    if (storedDate !== today) {
+      focusTimeAccumulated = 0;
+      breakTimeAccumulated = 0;
+      totalTimeAccumulated = 0;
+
+      setLocalStorageItem("lastDate", today);
+      saveAccumulatedTimes(
+        focusTimeAccumulated,
+        breakTimeAccumulated,
+        totalTimeAccumulated
+      );
+    } else {
+      focusTimeAccumulated = getLocalStorageItem("focusTimeAccumulated") || 0;
+      breakTimeAccumulated = getLocalStorageItem("breakTimeAccumulated") || 0;
+      totalTimeAccumulated = getLocalStorageItem("totalTimeAccumulated") || 0;
+    }
   }
 
   function formatTime(timeInSeconds) {
@@ -303,7 +339,8 @@ document.addEventListener("DOMContentLoaded", () => {
               </div>
             </div>
             <div id="time-results" class="modal-body fw-light d-flex justify-content-center">
-              <div class="mb-4">
+            <div class="mb-4">
+                <h4 class="text-center mb-3">TODAY</h4>
                 <div class="time-row">
                     <span class="time-label">Focus Time:</span>
                     <span  id="focus-time-accumulated"  class="time-value">10min</span>
@@ -333,7 +370,7 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
       </div>
     `;
-    // Guardamos las funciones en variables
+
     const volumeIconClickHandler = () => {
       stopSound(alarmSound, SOUND_FADE_DURATION);
       volumeIcon.innerHTML = volumeMuteIcon;
@@ -361,8 +398,14 @@ document.addEventListener("DOMContentLoaded", () => {
     modal.show();
 
     const volumeIcon = document.getElementById("alert-volume-icon");
-    volumeIcon.innerHTML = volumeUpIcon;
-    volumeIcon.addEventListener("click", volumeIconClickHandler);
+    const alarmVolume = getLocalStorageItem("alarmSoundVolume");
+    if (alarmVolume > 0) {
+      volumeIcon.innerHTML = volumeUpIcon;
+      volumeIcon.addEventListener("click", volumeIconClickHandler);
+    } else {
+      volumeIcon.innerHTML = volumeMuteIcon;
+      volumeIcon.classList.remove("blinking");
+    }
 
     const modalOkButton = document.getElementById("modalOkButton");
     modalOkButton.addEventListener("click", modalOkButtonClickHandler);
@@ -393,6 +436,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function initApp() {
+    resetAccumulatedTimesIfNewDay();
     // Init focus/break sliders
     focusSlider.addEventListener("input", () => {
       focusSliderText.textContent = focusSlider.value;
@@ -486,9 +530,10 @@ document.addEventListener("DOMContentLoaded", () => {
     setLocalStorageItem("backgroundVolume", temp);
 
     const storedalarmSoundVolume = getLocalStorageItem("alarmSoundVolume");
-    temp = storedalarmSoundVolume
-      ? storedalarmSoundVolume
-      : ALARM_SOUND_DEFAULT_VOLUME;
+    temp =
+      storedalarmSoundVolume || storedalarmSoundVolume === 0
+        ? storedalarmSoundVolume
+        : ALARM_SOUND_DEFAULT_VOLUME;
     setVolumeSliderValue("alarmSlider", temp);
     changeSoundVolume(alarmSound, temp);
     setLocalStorageItem("alarmSoundVolume", temp);

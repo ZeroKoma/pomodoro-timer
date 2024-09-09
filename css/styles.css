@@ -1,15 +1,9 @@
 /* styles.css */
 
 body {
-  display: flex;
   height: 100vh;
-  font-weight: 600;
   color: #fff;
   margin: 0;
-  overflow: hidden;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: stretch;
 }
 
 #time {
@@ -249,8 +243,4 @@ input[type="range"]:focus::-moz-range-thumb {
 
 #time-results .time-value {
   text-align: left;
-}
-
-#alert-volume-icon {
-  cursor: pointer;
 }
