@@ -325,8 +325,17 @@ input[type="range"]:focus::-moz-range-thumb {
 }
 
 .btn {
+  height: 35px;
+  font-size: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#changeVideoIdInput.btn {
   height: 28px;
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 14px;
 }
