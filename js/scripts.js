@@ -27,6 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const tickTockSlider = document.getElementById("tickTockSlider");
   const backgroundSlider = document.getElementById("backgroundSlider");
   const alarmSlider = document.getElementById("alarmSlider");
+  const videoBackgroundSlider = document.getElementById("videoBackgroundSlider");
 
   let focusTimeAccumulated = 0;
   let breakTimeAccumulated = 0;
@@ -98,10 +99,12 @@ document.addEventListener("DOMContentLoaded", () => {
             updateBreakTimeAccumulated(breakTime);
             showTimeBreakPanel();
             switchToPomodoroMode();
+            playVideo()
           } else {
             updateFocusTimeAccumulated(focusTime);
             switchToBreakMode();
             showTimeBreakPanel();
+            pauseVideo()
           }
         }
       }, 1000);
@@ -122,6 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
       playSoundFadeIn(backgroundSound, SOUND_FADE_DURATION);
     }
     updateEndTime();
+    playVideo()
   }
 
   function pauseTimerButton() {
@@ -133,6 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
       clearInterval(timer);
       isRunning = false;
       stopSoundFadeOut(backgroundSound, SOUND_FADE_DURATION);
+      pauseVideo()
     }
   }
 
@@ -150,6 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
     changeTimerLabel("Pomodoro Timer");
     resetProgressBar();
     updateTotalTimeAccumulated();
+    stopVideo()
   }
 
   function getFocusSliderValue() {
@@ -199,6 +205,13 @@ document.addEventListener("DOMContentLoaded", () => {
     showVolumeSliderValue("backgroundSliderText", value);
     changeSoundVolume(backgroundSound, value);
     setLocalStorageItem("backgroundVolume", value);
+  }
+
+  function getVideoBackgroundVolumeValue() {
+    const value = getVolumeSliderValue("videoBackgroundSlider");
+    showVolumeSliderValue("videoBackgroundSliderText", value);
+    changeVideoSoundVolume(value);
+    setLocalStorageItem("videoBackgroundVolume", value);
   }
 
   function getAlarmVolumeValue() {
@@ -436,6 +449,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function initApp() {
+    loadVideo()
     resetAccumulatedTimesIfNewDay();
     // Init focus/break sliders
     focusSlider.addEventListener("input", () => {
@@ -450,6 +464,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Init Volume sliders
     tickTockSlider.addEventListener("input", getTickTockVolumeValue);
     backgroundSlider.addEventListener("input", getBackgroundVolumeValue);
+    videoBackgroundSlider.addEventListener("input", getVideoBackgroundVolumeValue);
     alarmSlider.addEventListener("input", getAlarmVolumeValue);
 
     // Init Background music icons
@@ -526,8 +541,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const storedBackgroundSoundVolume = getLocalStorageItem("backgroundVolume");
     temp = storedBackgroundSoundVolume ? storedBackgroundSoundVolume : 0;
     setVolumeSliderValue("backgroundSlider", temp);
-    changeSoundVolume(backgroundSound, temp);
+    changeSoundVolume(temp);
     setLocalStorageItem("backgroundVolume", temp);
+
+    const storedVideoBackgroundSoundVolume = getLocalStorageItem("videoBackgroundVolume");
+    temp = storedVideoBackgroundSoundVolume ? storedVideoBackgroundSoundVolume : 0;
+    setVolumeSliderValue("videoBackgroundSlider", temp);
+    setLocalStorageItem("videoBackgroundVolume", temp);
 
     const storedalarmSoundVolume = getLocalStorageItem("alarmSoundVolume");
     temp =

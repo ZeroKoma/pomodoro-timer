@@ -4,6 +4,61 @@ body {
   height: 100vh;
   color: #fff;
   margin: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.content {
+  z-index: 1;
+  background: rgba(0, 0, 0, .9);
+  padding-bottom: 2rem;
+  border-radius: 0.375rem;
+}
+
+.video-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  overflow: hidden;
+}
+
+#yt-background {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 177.78vh; /* Relación de aspecto 16:9 */
+  height: 100vh;
+  transform: translate(-50%, -50%);
+  pointer-events: none; /* Evita interacción */
+}
+
+.video-sound-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  background: rgba(0, 0, 0, 0.7);
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.3s;
+}
+
+.video-sound-button:hover {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.video-sound-button img {
+  width: 30px;
+  height: 30px;
 }
 
 #time {

@@ -5,6 +5,7 @@
 // alarmSoundVolume
 // backgroundSoundFile
 // backgroundVolume
+// videoBackgroundVolume
 // focusTime
 // breakTime
 
