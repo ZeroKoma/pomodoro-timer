@@ -606,7 +606,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setLocalStorageItem("videoBackgroundURL", temp);
 
     const storedVideoList = getLocalStorageItem("videosList");
-    temp = storedVideoList.length
+    temp = storedVideoList?.length
       ? storedVideoList
       : [{ name: "Default Video", url: videoUrlByDefault }];
     setLocalStorageItem("videosList", temp);
