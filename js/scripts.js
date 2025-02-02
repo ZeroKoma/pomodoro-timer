@@ -27,7 +27,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const tickTockSlider = document.getElementById("tickTockSlider");
   const backgroundSlider = document.getElementById("backgroundSlider");
   const alarmSlider = document.getElementById("alarmSlider");
-  const videoBackgroundSlider = document.getElementById("videoBackgroundSlider");
+  const videoBackgroundSlider = document.getElementById(
+    "videoBackgroundSlider"
+  );
 
   let focusTimeAccumulated = 0;
   let breakTimeAccumulated = 0;
@@ -43,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
     <path d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06M6 5.04 4.312 6.39A.5.5 0 0 1 4 6.5H2v3h2a.5.5 0 0 1 .312.11L6 10.96zm7.854.606a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0"/>
   </svg>`;
 
-  const videoUrlByDefault = "https://www.youtube.com/watch?v=NIju0uaZue8"
+  const videoUrlByDefault = "https://www.youtube.com/watch?v=NIju0uaZue8";
 
   /* FUNCTIONS */
 
@@ -101,12 +103,12 @@ document.addEventListener("DOMContentLoaded", () => {
             updateBreakTimeAccumulated(breakTime);
             showTimeBreakPanel();
             switchToPomodoroMode();
-            playVideo()
+            playVideo();
           } else {
             updateFocusTimeAccumulated(focusTime);
             switchToBreakMode();
             showTimeBreakPanel();
-            pauseVideo()
+            pauseVideo();
           }
         }
       }, 1000);
@@ -127,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
       playSoundFadeIn(backgroundSound, SOUND_FADE_DURATION);
     }
     updateEndTime();
-    playVideo()
+    playVideo();
   }
 
   function pauseTimerButton() {
@@ -139,7 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
       clearInterval(timer);
       isRunning = false;
       stopSoundFadeOut(backgroundSound, SOUND_FADE_DURATION);
-      pauseVideo()
+      pauseVideo();
     }
   }
 
@@ -157,7 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
     changeTimerLabel("Pomodoro Timer");
     resetProgressBar();
     updateTotalTimeAccumulated();
-    stopVideo()
+    stopVideo();
   }
 
   function getFocusSliderValue() {
@@ -442,33 +444,35 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  function closePanel(div) {
+    div.style.height = div.scrollHeight + "px";
+    requestAnimationFrame(() => {
+      div.classList.add("hidden");
+      div.style.height = "0";
+    });
+  }
+
   function toggleVolumePanel() {
     const div = document.getElementById("sliders-volume-panel");
-    if (div.classList.contains('hidden')) {
+    const youtubeDiv = document.getElementById("change-youtube-url-form");
+    if (div.classList.contains("hidden")) {
       div.classList.remove("hidden");
       div.style.height = div.offsetHeight + "px";
       div.style.height = "";
+      closePanel(youtubeDiv);
     } else {
-      div.style.height = div.scrollHeight + "px";
-      requestAnimationFrame(() => {
-        div.classList.add("hidden");
-        div.style.height = "0";
-      });
+      closePanel(div);
     }
   }
 
   function toggleChangeYoutubeVideoUrl() {
     const div = document.getElementById("change-youtube-url-form");
-    if (div.classList.contains('hidden')) {
-      div.classList.remove("hidden");
-      div.style.height = div.offsetHeight + "px";
-      div.style.height = "";
+    const volumeDiv = document.getElementById("sliders-volume-panel");
+    if (div.classList.contains("hidden")) {
+      closePanel(volumeDiv);
+      showVideosList();
     } else {
-      div.style.height = div.scrollHeight + "px";
-      requestAnimationFrame(() => {
-        div.classList.add("hidden");
-        div.style.height = "0";
-      });
+      closePanel(div);
     }
   }
 
@@ -495,11 +499,18 @@ document.addEventListener("DOMContentLoaded", () => {
     // Init Volume sliders
     tickTockSlider.addEventListener("input", getTickTockVolumeValue);
     backgroundSlider.addEventListener("input", getBackgroundVolumeValue);
-    videoBackgroundSlider.addEventListener("input", getVideoBackgroundVolumeValue);
+    videoBackgroundSlider.addEventListener(
+      "input",
+      getVideoBackgroundVolumeValue
+    );
     alarmSlider.addEventListener("input", getAlarmVolumeValue);
 
-    document.getElementById('toggle-volume-panel-button').addEventListener('click', toggleVolumePanel)
-    document.getElementById('change-video-url-panel-button').addEventListener('click', toggleChangeYoutubeVideoUrl)
+    document
+      .getElementById("toggle-volume-panel-button")
+      .addEventListener("click", toggleVolumePanel);
+    document
+      .getElementById("change-video-url-panel-button")
+      .addEventListener("click", toggleChangeYoutubeVideoUrl);
 
     // Init Background music icons
     const backgroundAmbientIcons = document.querySelectorAll(".music-icon");
@@ -578,15 +589,27 @@ document.addEventListener("DOMContentLoaded", () => {
     changeSoundVolume(temp);
     setLocalStorageItem("backgroundVolume", temp);
 
-    const storedVideoBackgroundSoundVolume = getLocalStorageItem("videoBackgroundVolume");
-    temp = storedVideoBackgroundSoundVolume ? storedVideoBackgroundSoundVolume : 0;
+    const storedVideoBackgroundSoundVolume = getLocalStorageItem(
+      "videoBackgroundVolume"
+    );
+    temp = storedVideoBackgroundSoundVolume
+      ? storedVideoBackgroundSoundVolume
+      : 0;
     setVolumeSliderValue("videoBackgroundSlider", temp);
     setLocalStorageItem("videoBackgroundVolume", temp);
 
     const storedVideoBackgroundURL = getLocalStorageItem("videoBackgroundURL");
-    temp = storedVideoBackgroundURL ? storedVideoBackgroundURL : videoUrlByDefault;
-    setInitialVideo(temp)
+    temp = storedVideoBackgroundURL
+      ? storedVideoBackgroundURL
+      : videoUrlByDefault;
+    setInitialVideo(temp);
     setLocalStorageItem("videoBackgroundURL", temp);
+
+    const storedVideoList = getLocalStorageItem("videosList");
+    temp = storedVideoList.length
+      ? storedVideoList
+      : [{ name: "Default Video", url: videoUrlByDefault }];
+    setLocalStorageItem("videosList", temp);
 
     const storedalarmSoundVolume = getLocalStorageItem("alarmSoundVolume");
     temp =

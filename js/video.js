@@ -1,4 +1,5 @@
 let videoId;
+let player;
 
 function getYouTubeID(url) {
   try {
@@ -11,8 +12,6 @@ function getYouTubeID(url) {
     return null;
   }
 }
-
-let player;
 
 function playVideo() {
   const storedVideoBackgroundSoundVolume = getLocalStorageItem(
@@ -50,17 +49,110 @@ function setInitialVideo(url) {
   loadVideo();
 }
 
-function changeVideo() {
-  const url = document.getElementById("videoIdInput").value;
-  if (url && url.length !== 0) {
-    videoId = getYouTubeID(url);
+function isUrlInLocalStorage(url) {
+  console.log("- isUrlInLocalStorage: url: ", url);
+  const savedList = getLocalStorageItem("videosList");
+  let result = false;
+  savedList.forEach((element) => {
+    console.log("- isUrlInLocalStorage: forEach: element.url: ", element.url);
+    if (element.url === url) result = true;
+  });
+  return result;
+}
+
+function saveVideosListLocal() {
+  let savedList = getLocalStorageItem("videosList");
+  const url = new URL(player.getVideoUrl());
+  const videoId = url.searchParams.get("v");
+  const cleanUrl = `https://www.youtube.com/watch?v=${videoId}`;
+  if (!isUrlInLocalStorage(cleanUrl))
+    savedList.push({
+      name: player.getVideoData().title,
+      url: cleanUrl,
+    });
+  setLocalStorageItem("videosList", savedList);
+  // setTimeout(() => {
+  //   showVideosList();
+  // }, 1000);
+}
+
+function changeVideo(url = null) {
+  let urlToAdd;
+  if (!url || typeof url !== "string")
+    urlToAdd = document.getElementById("videoIdInput").value;
+  else urlToAdd = url;
+  if (urlToAdd && urlToAdd.length !== 0) {
+    videoId = getYouTubeID(urlToAdd);
     if (videoId) {
       player.destroy();
       loadVideo();
-      setLocalStorageItem("videoBackgroundURL", url);
+      if (!isUrlInLocalStorage(urlToAdd))
+        setLocalStorageItem("videoBackgroundURL", urlToAdd);
     }
     document.getElementById("videoIdInput").value = "";
   }
+}
+
+function changeVideoFromList(event) {
+  const index = event.target.dataset.id;
+  const savedList = getLocalStorageItem("videosList");
+  if (index >= 0 && index < savedList.length) {
+    changeVideo(savedList[index].url);
+  }
+}
+
+function showVideosList() {
+  let div = document.getElementById("videos-list");
+  const list = getLocalStorageItem("videosList") || [];
+
+  div.innerHTML = "";
+
+  list.forEach((video, index) => {
+    const videoItem = document.createElement("div");
+    videoItem.classList.add("video-item");
+
+    const videoName = document.createElement("span");
+    videoName.innerText = (index + 1).toString() + "- " + video.name;
+    videoName.setAttribute("title", video.name);
+    videoName.setAttribute("data-id", index);
+
+    const deleteButton = document.createElement("span");
+    deleteButton.innerText = "x";
+    deleteButton.classList.add("delete-button");
+    deleteButton.style.cursor = "pointer";
+    deleteButton.style.marginLeft = "10px";
+    deleteButton.setAttribute("title", "Delete Video from List");
+
+    deleteButton.addEventListener("click", () => {
+      deleteVideo(index);
+    });
+    videoItem.appendChild(videoName);
+    videoItem.appendChild(deleteButton);
+    div.appendChild(videoItem);
+    setTimeout(() => {
+      openPanel();
+    }, 500);
+  });
+  document.querySelectorAll(".video-item").forEach((item) => {
+    const firstChild = item.firstElementChild;
+    if (firstChild) {
+      firstChild.addEventListener("click", changeVideoFromList);
+    }
+  });
+}
+
+function openPanel() {
+  const divPanel = document.getElementById("change-youtube-url-form");
+  divPanel.classList.remove("hidden");
+  divPanel.style.height = divPanel.offsetHeight + "px";
+  divPanel.style.height = "";
+}
+
+function deleteVideo(index) {
+  const list = getLocalStorageItem("videosList") || [];
+  list.splice(index, 1);
+  setLocalStorageItem("videosList", list);
+  showVideosList();
 }
 
 function loadVideo() {
@@ -92,7 +184,7 @@ function loadVideo() {
   });
 
   function onPlayerReady() {
-    console.log("Player Ready!");
-    playVideo()
+    saveVideosListLocal();
+    playVideo();
   }
 }

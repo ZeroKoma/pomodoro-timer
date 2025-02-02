@@ -8,6 +8,7 @@
 // videoBackgroundVolume
 // focusTime
 // breakTime
+// videos list
 
 function setLocalStorageItem(key, value) {
   try {
