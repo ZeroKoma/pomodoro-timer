@@ -155,9 +155,8 @@ function loadVideo() {
     showinfo: 0,
     controls: 0,
     loop: 1,
+    playlist: videoId,
     rel: 0,
-    iv_load_policy: 3,
-    cc_load_policy: 1,
   };
 
   options = {
