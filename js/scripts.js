@@ -458,7 +458,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function toggleChangeYoutubeVideoUrl() {
-    console.log('asdfasdfasdfa')
     const div = document.getElementById("change-youtube-url-form");
     if (div.classList.contains('hidden')) {
       div.classList.remove("hidden");

@@ -93,5 +93,6 @@ function loadVideo() {
 
   function onPlayerReady() {
     console.log("Player Ready!");
+    playVideo()
   }
 }
