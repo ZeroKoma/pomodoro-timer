@@ -442,6 +442,37 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  function toggleVolumePanel() {
+    const div = document.getElementById("sliders-volume-panel");
+    if (div.classList.contains('hidden')) {
+      div.classList.remove("hidden");
+      div.style.height = div.offsetHeight + "px";
+      div.style.height = "";
+    } else {
+      div.style.height = div.scrollHeight + "px";
+      requestAnimationFrame(() => {
+        div.classList.add("hidden");
+        div.style.height = "0";
+      });
+    }
+  }
+
+  function toggleChangeYoutubeVideoUrl() {
+    console.log('asdfasdfasdfa')
+    const div = document.getElementById("change-youtube-url-form");
+    if (div.classList.contains('hidden')) {
+      div.classList.remove("hidden");
+      div.style.height = div.offsetHeight + "px";
+      div.style.height = "";
+    } else {
+      div.style.height = div.scrollHeight + "px";
+      requestAnimationFrame(() => {
+        div.classList.add("hidden");
+        div.style.height = "0";
+      });
+    }
+  }
+
   function TimeActive() {
     document.getElementById("time").classList.add("time-active");
   }
@@ -467,6 +498,9 @@ document.addEventListener("DOMContentLoaded", () => {
     backgroundSlider.addEventListener("input", getBackgroundVolumeValue);
     videoBackgroundSlider.addEventListener("input", getVideoBackgroundVolumeValue);
     alarmSlider.addEventListener("input", getAlarmVolumeValue);
+
+    document.getElementById('toggle-volume-panel-button').addEventListener('click', toggleVolumePanel)
+    document.getElementById('change-video-url-panel-button').addEventListener('click', toggleChangeYoutubeVideoUrl)
 
     // Init Background music icons
     const backgroundAmbientIcons = document.querySelectorAll(".music-icon");
