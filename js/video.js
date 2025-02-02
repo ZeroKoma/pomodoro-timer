@@ -129,9 +129,6 @@ function showVideosList() {
     videoItem.appendChild(videoName);
     videoItem.appendChild(deleteButton);
     div.appendChild(videoItem);
-    setTimeout(() => {
-      openPanel();
-    }, 500);
   });
   document.querySelectorAll(".video-item").forEach((item) => {
     const firstChild = item.firstElementChild;
@@ -139,13 +136,6 @@ function showVideosList() {
       firstChild.addEventListener("click", changeVideoFromList);
     }
   });
-}
-
-function openPanel() {
-  const divPanel = document.getElementById("change-youtube-url-form");
-  divPanel.classList.remove("hidden");
-  divPanel.style.height = divPanel.offsetHeight + "px";
-  divPanel.style.height = "";
 }
 
 function deleteVideo(index) {
@@ -185,6 +175,7 @@ function loadVideo() {
 
   function onPlayerReady() {
     saveVideosListLocal();
+    showVideosList()
     playVideo();
   }
 }

@@ -452,6 +452,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  function openPanel(divPanel) {
+    divPanel.classList.remove("hidden");
+    divPanel.style.height = divPanel.offsetHeight + "px";
+    divPanel.style.height = "";
+  }
+
   function toggleVolumePanel() {
     const div = document.getElementById("sliders-volume-panel");
     const youtubeDiv = document.getElementById("change-youtube-url-form");
@@ -471,6 +477,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (div.classList.contains("hidden")) {
       closePanel(volumeDiv);
       showVideosList();
+      openPanel(div)
     } else {
       closePanel(div);
     }
