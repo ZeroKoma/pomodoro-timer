@@ -108,7 +108,6 @@ document.addEventListener("DOMContentLoaded", () => {
             updateFocusTimeAccumulated(focusTime);
             switchToBreakMode();
             showTimeBreakPanel();
-            pauseVideo();
           }
         }
       }, 1000);
@@ -130,6 +129,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     updateEndTime();
     playVideo();
+    const div = document.getElementById("change-youtube-url-form");
+    const volumeDiv = document.getElementById("sliders-volume-panel");
+    closePanel(div)
+    closePanel(volumeDiv)
   }
 
   function pauseTimerButton() {

@@ -50,11 +50,9 @@ function setInitialVideo(url) {
 }
 
 function isUrlInLocalStorage(url) {
-  console.log("- isUrlInLocalStorage: url: ", url);
   const savedList = getLocalStorageItem("videosList");
   let result = false;
   savedList.forEach((element) => {
-    console.log("- isUrlInLocalStorage: forEach: element.url: ", element.url);
     if (element.url === url) result = true;
   });
   return result;
@@ -153,10 +151,10 @@ function loadVideo() {
 
   playerVars = {
     showinfo: 0,
+    rel: 0,
     controls: 0,
     loop: 1,
     playlist: videoId,
-    rel: 0,
   };
 
   options = {
@@ -165,7 +163,7 @@ function loadVideo() {
     videoId: videoId,
     playerVars: playerVars,
     events: {
-      onReady: onPlayerReady,
+      onReady: onPlayerReady
     },
   };
   window.YT.ready(function () {

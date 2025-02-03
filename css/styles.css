@@ -35,7 +35,7 @@ body {
   width: 177.78vh;
   height: 100vh;
   transform: translate(-50%, -50%);
-  pointer-events: none;
+  /*pointer-events: none;*/
 }
 
 #time {
@@ -64,7 +64,7 @@ body {
 }
 
 #display-panel {
-  width: 22.5rem;
+  width: 25rem;
 }
 
 #sliders-time-panel {
