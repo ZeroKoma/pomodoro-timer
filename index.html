@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,27 +16,44 @@
    
     <div id="draggable" class="content">
         <div id="display-panel">
-            <div class="text-center my-4">
+            <div class="d-flex flex-column align-items-center">
                 <div class="d-flex justify-content-center align-items-center">
-                    <img width="25" height="25" alt="Pomodoro icon" src="imgs/favicon.png"/>
-                    <h1 id="timerLabel" class="ms-2">Pomodoro Timer</h1>
+                    <img width="25" height="25"  alt="Pomodoro icon" src="imgs/favicon.png"/>
+                    <h1 id="timerLabel" class="ms-3">Pomodoro Timer</h1>
                 </div>
-                <h2 id="time">25:00</h2>
-                <div class="d-flex justify-content-center">
-                    <div class="progress">
-                        <div id="progress-bar" class="progress-bar bg-info" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
+                <span class="author">by ZeroKoma</span>
+                
+                <h2 id="time" class="mt-2">25:00</h2>
+
+                <div class="separator"></div>
+                
+                <div class="btn-group mt-2">
+                    <button id="start" class="btn btn-secondary px-4" title="Start">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
+                            <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
+                        </svg>
+                    </button>
+                    <button id="pause" class="btn btn-secondary px-4" title="Pause">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-pause-fill" viewBox="0 0 16 16">
+                            <path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"/>
+                        </svg>
+                    </button>
+                    <button id="stop" class="btn btn-secondary px-4 active" title="Stop">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-stop-fill" viewBox="0 0 16 16">
+                            <path d="M5 3.5h6A1.5 1.5 0 0 1 12.5 5v6a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 11V5A1.5 1.5 0 0 1 5 3.5z"/>
+                        </svg>
+                    </button>
                 </div>
-                <div class="btn-group mt-3">
-                    <button id="start" class="btn btn-secondary">Start</button>
-                    <button id="pause" class="btn btn-secondary">Pause</button>
-                    <button id="stop" class="btn btn-secondary active">Stop</button>
+                <div class="d-flex align-items-center justify-content-around pt-2">
+                <div id="cycleDisplay" class="d-flex justify-content-center align-items-center d-none">
+                    <p id="cycleValue" class="cycle me-2 mb-1"></p>
                 </div>
-                <div class="pt-3 fw-light">
+                <div class="fw-light end-time">
                     <div class="col-12 d-flex justify-content-center align-items-center">
-                        <p>End Time:</p>
-                        <p class="ms-2" id="endTimeValue">-- : --</p>
+                        <p class="mb-1">End Time:</p>
+                        <p class="ms-1 mb-1" id="endTimeValue">-- : --</p>
                     </div>
+                </div>
                 </div>
             </div>
         </div>
@@ -44,10 +61,10 @@
         <div id="sliders-time-panel" class="fw-light fs-14 hidden-box">
             <div class="d-flex flex-column align-items-center justify-content-center">
                 <div class="separator"></div>
-                <div class="options-container">
+                <div class="options-container text-center">
                     <div class="mb-2">
                         <span class="me-3">Focus Time:</span>
-                        <div class="d-flex">
+                        <div class="d-flex justify-content-center align-items-center">
                             <input type="range" id="focusSlider" min="5" max="50" step="5" value="25">
                             <div class="text-light d-flex ms-3">
                                 <span id="focusSliderText">25</span>
@@ -57,7 +74,7 @@
                     </div>
                     <div class="mb-2">
                         <span class="me-3">Break Time:</span>
-                        <div class="d-flex">
+                        <div class="d-flex justify-content-center align-items-center">
                             <input type="range" id="breakSlider" min="5" max="30" step="5" value="5">
                             <div class="text-light d-flex ms-3">
                                 <span id="breakSliderText">5</span>
@@ -73,8 +90,7 @@
         <div id="toggle-volume-panel-button" class="d-flex flex-column justify-content-center align-items-center">
             <div class="separator"></div>
             <div class="d-flex flex-row justify-content-center align-items-center cursor-pointer">
-                <div class="me-3" title="Toggle Volumen Panel"><b>Sounds</b> Panel:</div>
-                <?xml version="1.0" encoding="utf-8"?>
+                <div class="me-3" title="Toggle Volumen Panel">Sound Panel:</div>
                 <svg fill="#ffffff" width="16px" height="16px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" cursor="pointer">
 
                     <g id="SVGRepo_bgCarrier" stroke-width="0"/>
@@ -92,23 +108,12 @@
         <div id="sliders-volume-panel" class="fw-light fs-14 hidden-box hidden">
             <div class="d-flex justify-content-center">
                 <div class="options-container">
-                    <div class="mt-2 mb-2 pt-2">
+                    <div class="mt-2 mb-2 pt-2 d-flex flex-column justify-content-center align-items-center">
                         <span class="me-3">Tick tock Volume:</span>
                         <div class="d-flex">
                             <input type="range" id="tickTockSlider" min="0" max="100" step="5" value="0">
                             <div class="text-light ms-3">
                                 <span id="tickTockSliderText">0</span>
-                                <span class="ms-1">%</span>
-                            </div>
-                        </div>
-                    </div>
-    
-                    <div class="mb-3">
-                        <span class="me-3">Background Volume:</span>
-                        <div class="d-flex">
-                            <input type="range" id="backgroundSlider" min="0" max="100" step="5" value="0">
-                            <div class="text-light d-flex ms-3">
-                                <span id="backgroundSliderText">0</span>
                                 <span class="ms-1">%</span>
                             </div>
                         </div>
@@ -125,6 +130,17 @@
                                 <title>Binaural</title>
                             </svg>
                             <svg id="rainBackground" data-sound="sounds/Rain.mp3" class="music-icon" width="24px" height="24px" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" overflow="visible" role="button" cursor="pointer" color="white" name="Rain ambient sound"><g clip-path="url(#rain_svg__clip0_4_13)" fill="currentColor"><path d="M37.5 31.5h-27C4.71 31.5 0 26.79 0 21s4.71-10.5 10.5-10.5c.532 0 1.06.04 1.58.118C12.766 4.65 17.85 0 24 0s11.233 4.65 11.92 10.618c.52-.079 1.048-.118 1.58-.118C43.29 10.5 48 15.21 48 21s-4.71 10.5-10.5 10.5zm-27-18C6.365 13.5 3 16.864 3 21s3.365 7.5 7.5 7.5h27c4.136 0 7.5-3.364 7.5-7.5s-3.364-7.5-7.5-7.5c-.863 0-1.708.145-2.511.43a1.5 1.5 0 01-2-1.495c.007-.134.01-.276.01-.435 0-4.963-4.036-9-9-9-4.962 0-9 4.037-9 9 0 .159.005.301.012.434a1.5 1.5 0 01-2 1.496 7.477 7.477 0 00-2.511-.43zM20.249 39.75a1.5 1.5 0 01-1.247-2.332l1.5-2.25a1.5 1.5 0 012.496 1.664l-1.5 2.25c-.289.434-.765.668-1.25.668zM7.499 39.75a1.5 1.5 0 01-1.247-2.332l1.5-2.25a1.5 1.5 0 012.496 1.664l-1.5 2.25c-.289.434-.765.668-1.25.668zM34.499 39.75a1.5 1.5 0 01-1.247-2.332l1.5-2.25a1.5 1.5 0 012.496 1.664l-1.5 2.25c-.289.434-.765.668-1.25.668zM20.249 48a1.5 1.5 0 01-1.247-2.332l1.5-2.25a1.5 1.5 0 012.496 1.664l-1.5 2.25c-.289.434-.765.668-1.25.668zM26.999 42.75a1.5 1.5 0 01-1.247-2.332l1.5-2.25a1.5 1.5 0 012.496 1.664l-1.5 2.25c-.289.434-.765.668-1.25.668zM33.749 48a1.5 1.5 0 01-1.247-2.332l1.5-2.25a1.5 1.5 0 112.496 1.664l-1.5 2.25c-.289.434-.765.668-1.25.668zM13.499 42.75a1.5 1.5 0 01-1.247-2.332l1.5-2.25a1.5 1.5 0 012.496 1.664l-1.5 2.25c-.289.434-.765.668-1.25.668zM6.749 48a1.5 1.5 0 01-1.247-2.332l1.5-2.25a1.5 1.5 0 112.496 1.664l-1.5 2.25c-.289.434-.765.668-1.25.668z"></path></g><defs><clipPath id="rain_svg__clip0_4_13"><path fill="currentColor" d="M0 0h48v48H0z"></path></clipPath></defs><title>Rain</title></svg>
+                        </div>
+                    </div>
+    
+                    <div class="mb-3">
+                        <span class="me-3">Background Volume:</span>
+                        <div class="d-flex">
+                            <input type="range" id="backgroundSlider" min="0" max="100" step="5" value="0">
+                            <div class="text-light d-flex ms-3">
+                                <span id="backgroundSliderText">0</span>
+                                <span class="ms-1">%</span>
+                            </div>
                         </div>
                     </div>
                     
@@ -154,11 +170,15 @@
             </div>
         </div>
 
-        <div id="change-video-url-panel-button" class="d-flex flex-column justify-content-center align-items-center" title="Change Youtube video Url">
+        <div class="d-flex flex-column justify-content-center align-items-center">
             <div class="separator"></div>
-            <div class="d-flex flex-row justify-content-center align-items-center cursor-pointer">
-                <div class="me-3 mb-1">Change <span class="fw-bold">Youtube</span> Video:</div>
-                <svg width="26px" height="26px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <div class="d-flex flex-row justify-content-center align-items-center">
+                <div class="form-check form-switch me-3">
+                    <input class="form-check-input" type="checkbox" role="switch" id="video-toggle-switch" checked>
+                    <label class="form-check-label ms-2 cursor-pointer" id="video-toggle-label" title="Manage Youtube Playlist">Background Video:</label>
+                </div>
+                <div id="change-video-url-panel-button" class="cursor-pointer" title="Manage Youtube Playlist">
+                    <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 
                     <g id="SVGRepo_bgCarrier" stroke-width="0"/>
                     
@@ -167,10 +187,11 @@
                     <g id="SVGRepo_iconCarrier"> <path d="M19.67 8.14002C19.5811 7.7973 19.4028 7.48433 19.1533 7.23309C18.9038 6.98185 18.5921 6.80134 18.25 6.71001C16.176 6.4654 14.0883 6.35517 12 6.38001C9.91174 6.35517 7.82405 6.4654 5.75001 6.71001C5.40793 6.80134 5.09622 6.98185 4.84674 7.23309C4.59725 7.48433 4.41894 7.7973 4.33001 8.14002C4.10282 9.41396 3.99236 10.706 4.00001 12C3.99198 13.3007 4.10244 14.5994 4.33001 15.88C4.42355 16.2172 4.60391 16.5239 4.85309 16.7696C5.10226 17.0153 5.41153 17.1913 5.75001 17.28C7.82405 17.5246 9.91174 17.6349 12 17.61C14.0883 17.6349 16.176 17.5246 18.25 17.28C18.5885 17.1913 18.8978 17.0153 19.1469 16.7696C19.3961 16.5239 19.5765 16.2172 19.67 15.88C19.8976 14.5994 20.008 13.3007 20 12C20.0077 10.706 19.8972 9.41396 19.67 8.14002ZM10.36 14.39V9.63001L14.55 12L10.36 14.38V14.39Z" fill="#ffffff"/> </g>
                     <title>Change Youtube video Url</title>
                     </svg>
+                </div>
             </div>
         </div>
         <div id="change-youtube-url-form" class="hidden-box hidden px-5">
-            <div id="videos-list" class="mt-2"></div>
+            <div id="videos-list" class="mt-3"></div>
             <div class="d-flex align-items-center mt-2 mb-2">
                 <input type="text" id="videoIdInput" placeholder="Enter valid url" />
                 <button class="btn btn-secondary ms-3" id="changeVideoIdInput">Add</button>
@@ -186,14 +207,8 @@
         </div>
     </div>
     
-
+    <script type="module" src="js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
-    <script src="js/video.js"></script>
-    <script src="js/scripts.js"></script>
-    <script src="js/sounds.js"></script>
-    <script src="js/localStorage.js"></script>
-    <script src="js/sliders.js"></script>
-    <script src="js/dragContent.js"></script>
 </body>
 </html>

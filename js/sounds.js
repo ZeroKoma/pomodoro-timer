@@ -19,7 +19,8 @@ function changeSound(audioElement, newSound) {
 }
 
 function changeSoundVolume(audioElement, newVolume) {
-  audioElement.volume = newVolume / 100;
+  const volume = Math.max(0, Math.min(100, Number(newVolume))) / 100;
+  audioElement.volume = volume;
 }
 
 function playSoundFadeIn(audioElement, fadeDuration) {

@@ -1,3 +1,6 @@
+import { getLocalStorageItem, setLocalStorageItem } from "../utils/storage.js";
+import { state, DEFAULTS } from "../state/store.js";
+
 let videoId;
 let player;
 
@@ -13,44 +16,35 @@ function getYouTubeID(url) {
   }
 }
 
-function playVideo() {
-  const storedVideoBackgroundSoundVolume = getLocalStorageItem(
-    "videoBackgroundVolume"
-  );
-  temp = storedVideoBackgroundSoundVolume
-    ? storedVideoBackgroundSoundVolume
-    : 0;
-  setVolumeSliderValue("videoBackgroundSlider", temp);
-  changeVideoSoundVolume(temp);
-  setLocalStorageItem("videoBackgroundVolume", temp);
-  if (player) player.playVideo();
+export function playVideo() {
+  // Only play if player exists AND video is enabled
+  if (player && state.videoEnabled) {
+    player.setVolume(state.audio.videoVolume);
+    player.playVideo();
+  }
 }
 
-function stopVideo() {
+export function stopVideo() {
   if (player) player.stopVideo();
 }
 
-function pauseVideo() {
+export function pauseVideo() {
   if (player) player.pauseVideo();
 }
 
-function changeVideoSoundVolume(newVolume) {
+export function changeVideoSoundVolume(newVolume) {
   if (player) {
     player.setVolume(newVolume);
   }
 }
 
-document
-  .getElementById("changeVideoIdInput")
-  .addEventListener("click", changeVideo);
-
-function setInitialVideo(url) {
+export function setInitialVideo(url) {
   videoId = getYouTubeID(url);
   loadVideo();
 }
 
 function isUrlInLocalStorage(url) {
-  const savedList = getLocalStorageItem("videosList");
+  const savedList = getLocalStorageItem("videosList") || [];
   let result = false;
   savedList.forEach((element) => {
     if (element.url === url) result = true;
@@ -59,7 +53,7 @@ function isUrlInLocalStorage(url) {
 }
 
 function saveVideosListLocal() {
-  let savedList = getLocalStorageItem("videosList");
+  let savedList = getLocalStorageItem("videosList") || [];
   const url = new URL(player.getVideoUrl());
   const videoId = url.searchParams.get("v");
   const cleanUrl = `https://www.youtube.com/watch?v=${videoId}`;
@@ -69,12 +63,9 @@ function saveVideosListLocal() {
       url: cleanUrl,
     });
   setLocalStorageItem("videosList", savedList);
-  // setTimeout(() => {
-  //   showVideosList();
-  // }, 1000);
 }
 
-function changeVideo(url = null) {
+export function changeVideo(url = null) {
   let urlToAdd;
   if (!url || typeof url !== "string")
     urlToAdd = document.getElementById("videoIdInput").value;
@@ -82,7 +73,7 @@ function changeVideo(url = null) {
   if (urlToAdd && urlToAdd.length !== 0) {
     videoId = getYouTubeID(urlToAdd);
     if (videoId) {
-      player.destroy();
+      if (player) player.destroy();
       loadVideo();
       if (!isUrlInLocalStorage(urlToAdd))
         setLocalStorageItem("videoBackgroundURL", urlToAdd);
@@ -91,7 +82,7 @@ function changeVideo(url = null) {
   }
 }
 
-function changeVideoFromList(event) {
+export function changeVideoFromList(event) {
   const index = event.target.dataset.id;
   const savedList = getLocalStorageItem("videosList");
   if (index >= 0 && index < savedList.length) {
@@ -99,7 +90,7 @@ function changeVideoFromList(event) {
   }
 }
 
-function showVideosList() {
+export function showVideosList() {
   let div = document.getElementById("videos-list");
   const list = getLocalStorageItem("videosList") || [];
 
@@ -114,18 +105,24 @@ function showVideosList() {
     videoName.setAttribute("title", video.name);
     videoName.setAttribute("data-id", index);
 
-    const deleteButton = document.createElement("span");
-    deleteButton.innerText = "x";
-    deleteButton.classList.add("delete-button");
-    deleteButton.style.cursor = "pointer";
-    deleteButton.style.marginLeft = "10px";
-    deleteButton.setAttribute("title", "Delete Video from List");
-
-    deleteButton.addEventListener("click", () => {
-      deleteVideo(index);
-    });
     videoItem.appendChild(videoName);
-    videoItem.appendChild(deleteButton);
+
+    // Only add delete button if it is NOT the default video
+    if (video.url !== DEFAULTS.videoUrl) {
+      const deleteButton = document.createElement("span");
+      deleteButton.innerText = "x";
+      deleteButton.classList.add("delete-button");
+      deleteButton.style.cursor = "pointer";
+      deleteButton.style.marginLeft = "10px";
+      deleteButton.setAttribute("title", "Delete Video from List");
+
+      deleteButton.addEventListener("click", (e) => {
+        e.stopPropagation(); // Prevent click from propagating to the video item
+        deleteVideo(index);
+      });
+      videoItem.appendChild(deleteButton);
+    }
+
     div.appendChild(videoItem);
   });
   document.querySelectorAll(".video-item").forEach((item) => {
@@ -136,7 +133,7 @@ function showVideosList() {
   });
 }
 
-function deleteVideo(index) {
+export function deleteVideo(index) {
   const list = getLocalStorageItem("videosList") || [];
   list.splice(index, 1);
   setLocalStorageItem("videosList", list);
@@ -144,35 +141,39 @@ function deleteVideo(index) {
 }
 
 function loadVideo() {
-  var tag = document.createElement("script");
-  tag.src = "https://www.youtube.com/iframe_api";
-  var firstScriptTag = document.getElementsByTagName("script")[0];
-  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-  playerVars = {
+  const playerVars = {
     showinfo: 0,
     rel: 0,
     controls: 0,
     loop: 1,
     playlist: videoId,
+    origin: window.location.origin // Helps with secure communication on localhost
   };
 
-  options = {
+  const options = {
     height: "360",
     width: "640",
     videoId: videoId,
     playerVars: playerVars,
     events: {
-      onReady: onPlayerReady
+      onReady: onPlayerReady,
     },
   };
-  window.YT.ready(function () {
-    if (videoId) player = new YT.Player("yt-background", options);
-  });
+
+  const checkYT = () => {
+    if (window.YT && window.YT.Player) {
+      if (videoId) player = new YT.Player("yt-background", options);
+    } else {
+      setTimeout(checkYT, 100);
+    }
+  };
+  checkYT();
 
   function onPlayerReady() {
     saveVideosListLocal();
-    showVideosList()
-    playVideo();
+    showVideosList();
+    if (state.status === "running") {
+      playVideo();
+    }
   }
 }

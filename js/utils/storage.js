@@ -10,7 +10,7 @@
 // breakTime
 // videos list
 
-function setLocalStorageItem(key, value) {
+export function setLocalStorageItem(key, value) {
   try {
     const serializedValue = JSON.stringify(value);
     localStorage.setItem(key, serializedValue);
@@ -19,7 +19,7 @@ function setLocalStorageItem(key, value) {
   }
 }
 
-function getLocalStorageItem(key) {
+export function getLocalStorageItem(key) {
   try {
     const serializedValue = localStorage.getItem(key);
     return serializedValue !== null ? JSON.parse(serializedValue) : null;
@@ -29,7 +29,7 @@ function getLocalStorageItem(key) {
   }
 }
 
-function removeLocalStorageItem(key) {
+export function removeLocalStorageItem(key) {
   try {
     localStorage.removeItem(key);
   } catch (error) {
@@ -37,7 +37,7 @@ function removeLocalStorageItem(key) {
   }
 }
 
-function clearLocalStorage() {
+export function clearLocalStorage() {
   try {
     localStorage.clear();
   } catch (error) {

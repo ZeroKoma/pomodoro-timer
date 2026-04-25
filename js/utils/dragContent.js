@@ -7,13 +7,15 @@ document.addEventListener("DOMContentLoaded", () => {
     isDragging = false;
 
   function startDrag(e) {
-    draggable.classList.add("content-shadow");
-    if (
-      e.target.tagName.toLowerCase() === "input" &&
-      e.target.type === "range"
-    ) {
+    // Do not drag if clicking on inputs, buttons, or interactive elements
+    const isInteractive = e.target.closest(
+      "input, button, .cursor-pointer, .music-icon, .video-item",
+    );
+    if (isInteractive) {
       return;
     }
+
+    e.preventDefault(); // Prevent text selection and browser default drag behavior
     isDragging = true;
     offsetX = e.clientX - draggable.offsetLeft;
     offsetY = e.clientY - draggable.offsetTop;
@@ -29,7 +31,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function stopDrag() {
-    draggable.classList.remove("content-shadow");
     isDragging = false;
     draggable.style.cursor = "grab";
   }
