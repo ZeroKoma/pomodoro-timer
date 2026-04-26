@@ -477,21 +477,21 @@ input[type="range"]:focus::-moz-range-thumb {
   background-color: rgb(8, 8, 8);
   border-color: var(--grey-light);
   cursor: pointer;
-  /* Forzamos la bolita blanca cuando está desactivado */
+  /* Force white thumb when disabled */
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
 }
 
 #video-toggle-switch.form-check-input:checked {
   background-color: rgba(46, 204, 113, 0.4); /* Attenuated accent color */
   border-color: rgba(46, 204, 113, 0.5);
-  /* Mantenemos la bolita blanca cuando está activado */
+  /* Keep white thumb when enabled */
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
 }
 
 #video-toggle-switch.form-check-input:focus {
   box-shadow: none;
   border-color: var(--accent-color);
-  /* Evitamos que la bolita cambie a azul o negro al tener el foco */
+  /* Prevent thumb from changing to blue or black when focused */
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
 }
 

@@ -10,7 +10,9 @@ const sounds = {
 // Initial configuration
 sounds.tick.loop = false;
 sounds.alarm.loop = false;
-sounds.background.loop = true;
+sounds.background.loop = false; // Disable native loop to handle the fade manually
+
+let isFadingOut = false;
 
 export const audioManager = {
   playTick() {
@@ -42,18 +44,22 @@ export const audioManager = {
     if (!sounds.background.src.includes(src)) {
       sounds.background.src = src;
     }
-    
+
     this.playWithFade(sounds.background, state.audio.backgroundVolume / 100);
   },
 
   playWithFade(audioElement, targetVolume, duration = 1000) {
+    audioElement.currentTime = 0; // Ensure it starts from second 0
     audioElement.volume = 0;
-    audioElement.play().catch(e => console.warn("Audio blocked", e));
-    
+    audioElement.play().catch((e) => console.warn("Audio blocked", e));
+
     const step = targetVolume / (duration / 50);
     const interval = setInterval(() => {
       if (audioElement.volume < targetVolume) {
-        audioElement.volume = Math.min(audioElement.volume + step, targetVolume);
+        audioElement.volume = Math.min(
+          audioElement.volume + step,
+          targetVolume,
+        );
       } else {
         clearInterval(interval);
       }
@@ -85,3 +91,34 @@ export const audioManager = {
     sounds.background.volume = state.audio.backgroundVolume / 100;
   },
 };
+
+// Events to handle smooth loop (Manual cross-fade)
+sounds.background.addEventListener("play", () => {
+  isFadingOut = false;
+});
+
+sounds.background.addEventListener("ended", () => {
+  // When it ends, we restart using the existing fade-in logic
+  audioManager.playBackground();
+});
+
+sounds.background.addEventListener("timeupdate", () => {
+  const fadeThreshold = 2; // Seconds before the end to start fading out
+  if (
+    sounds.background.duration > 0 &&
+    sounds.background.currentTime >
+      sounds.background.duration - fadeThreshold &&
+    !isFadingOut &&
+    state.status === "running"
+  ) {
+    isFadingOut = true;
+    const step = sounds.background.volume / (fadeThreshold * 20); // 20 steps per second (50ms interval)
+    const fadeOutInterval = setInterval(() => {
+      if (sounds.background.volume > 0.01) {
+        sounds.background.volume = Math.max(0, sounds.background.volume - step);
+      } else {
+        clearInterval(fadeOutInterval);
+      }
+    }, 50);
+  }
+});

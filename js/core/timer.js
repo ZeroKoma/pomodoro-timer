@@ -95,7 +95,7 @@ function showBootstrapAlert(message, type = "info") {
 
   document.body.appendChild(alert);
 
-  // Al cerrar la notificación de Bootstrap, quitamos el difuminado
+  // When the Bootstrap notification is closed, remove the blur effect
   alert.addEventListener("closed.bs.alert", () => {
     elements.videoContainer?.classList.remove("paused-effect");
   });
@@ -128,7 +128,7 @@ function completePhase() {
   audioManager.stopTick();
   audioManager.stopBackground();
 
-  // Activamos el difuminado al terminar el ciclo
+  // Enable the blur effect when the cycle ends
   elements.videoContainer?.classList.add("paused-effect");
 
   // Pausamos el video de fondo al finalizar la fase
