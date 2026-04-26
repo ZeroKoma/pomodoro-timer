@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // 4. Update current time and start interval
   const updateClock = () => {
     document.getElementById("currentTime").textContent =
-      new Date().toLocaleTimeString();
+      new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
   updateClock(); // Immediate update
   setInterval(updateClock, 1000);

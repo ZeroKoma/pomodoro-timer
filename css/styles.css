@@ -22,7 +22,7 @@ body {
 }
 
 .author {
-  font-size: 0.675rem;
+  font-size: 0.775rem;
   color: green;
 }
 
@@ -151,6 +151,11 @@ body {
 
 .btn-group {
   width: 18.5rem;
+  padding-right: 3rem;
+  padding-left: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .btn-group .btn {
@@ -475,7 +480,7 @@ input[type="range"]:focus::-moz-range-thumb {
 /* Custom styles for Video Switch */
 #video-toggle-switch.form-check-input {
   background-color: rgb(8, 8, 8);
-  border-color: var(--grey-light);
+  border-color: var(--color-pomodoro);
   cursor: pointer;
   /* Force white thumb when disabled */
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
@@ -490,7 +495,6 @@ input[type="range"]:focus::-moz-range-thumb {
 
 #video-toggle-switch.form-check-input:focus {
   box-shadow: none;
-  border-color: var(--accent-color);
   /* Prevent thumb from changing to blue or black when focused */
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
 }
