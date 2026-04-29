@@ -5,6 +5,7 @@ import { updateState, state } from "../state/store.js";
 import { renderTime, renderEndTime } from "../ui/render.js";
 import { audioManager } from "../utils/audio.js";
 import { changeVideoSoundVolume, changeVideo, showVideosList, playVideo, pauseVideo } from "./video.js";
+import { notificationManager } from "../utils/notifications.js";
 
 let endTimeIntervalId = null;
 let autoCloseTimer = null;
@@ -284,4 +285,7 @@ export function initEvents() {
 
   // Start auto-updates on load
   startAutoUpdateEndTime();
+
+  // Solicitar permisos de notificación al cargar
+  notificationManager.requestPermission();
 }

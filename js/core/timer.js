@@ -4,6 +4,7 @@ import { renderTime, renderEndTime, renderCycle } from "../ui/render.js";
 import { audioManager } from "../utils/audio.js";
 import { playVideo, pauseVideo, stopVideo as stopYTVideo } from "./video.js";
 import { elements } from "../ui/dom.js";
+import { notificationManager } from "../utils/notifications.js";
 
 let intervalId = null;
 let endTime = null;
@@ -164,6 +165,12 @@ function completePhase() {
   showBootstrapAlert(
     `Finished <span class="alert-value-finished">${getModeDisplayName(completedMode)}</span>. Next: <span class="alert-value-next">${nextDisplay}</span>`,
     "success",
+  );
+
+  // Notificación del Sistema
+  notificationManager.show(
+    `Phase Finished: ${getModeDisplayName(completedMode)}`,
+    `Next up: ${nextDisplay}`,
   );
 
   // Update UI for the new phase
